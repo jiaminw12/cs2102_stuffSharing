@@ -11,8 +11,7 @@ SET client_min_messages = warning;
 
 SET search_path = public, pg_catalog;
 
-ALTER TABLE ONLY public.userinfo DROP CONSTRAINT user_pkey;
-ALTER TABLE ONLY public.userinfo DROP CONSTRAINT user_email_key;
+ALTER TABLE ONLY public.userinfo DROP CONSTRAINT userinfo_pkey;
 DROP TABLE public.userinfo;
 DROP EXTENSION plpgsql;
 DROP SCHEMA public;
@@ -57,11 +56,15 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE userinfo (
-    username character(100) NOT NULL,
-    name text NOT NULL,
-    roles text NOT NULL,
-    email character(256) NOT NULL,
-    password text NOT NULL
+    username character varying(256) NOT NULL,
+    email character varying(256) NOT NULL,
+    name character varying(256) NOT NULL,
+    password character varying(128) NOT NULL,
+    contact_num character(10) NOT NULL,
+    address character varying(256) NOT NULL,
+    date_of_birth date NOT NULL,
+    admin smallint DEFAULT 0,
+    bid_point integer DEFAULT 1000
 );
 
 
@@ -71,24 +74,15 @@ ALTER TABLE userinfo OWNER TO postgres;
 -- Data for Name: userinfo; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY userinfo (username, name, roles, email, password) FROM stdin;
-\.
+INSERT INTO userinfo VALUES ('a', 'aa@aa.com', 'a', 'c4ca4238a0b923820dcc509a6f75849b', '111       ', 'ssad', '2016-03-03', 0, 1000);
 
 
 --
--- Name: user_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY userinfo
-    ADD CONSTRAINT user_email_key UNIQUE (email);
-
-
---
--- Name: user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: userinfo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY userinfo
-    ADD CONSTRAINT user_pkey PRIMARY KEY (username);
+    ADD CONSTRAINT userinfo_pkey PRIMARY KEY (username, email);
 
 
 --

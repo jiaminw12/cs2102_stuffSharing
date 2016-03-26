@@ -38,14 +38,14 @@ namespace UserController {
         }
     }
 
-    function createNewUser($username, $name, $roles, $email, $password) {
+    function createNewUser($username, $name, $email, $password, $contact_num, $address, $date_of_birth, $admin) {
         $password = md5($password);
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
             return null;
         } else {
 
-            $statement = "INSERT INTO userinfo(username, name, roles, email, password) VALUES('" . $username . "', '" . $name . "', '" . $roles . "', '" . $email . "', '" . $password . "')";
+            $statement = "INSERT INTO userinfo(username, name, email, password, contact_num, address, date_of_birth, admin) VALUES('" . $username . "', '" . $name . "', '" . $email . "', '" . $password . "', '" . $contact_num ."', '" . $address ."', '" . $date_of_birth . "', '" . $admin . "')";
 
             $r = \DBHandler::execute($statement, false);
             
@@ -62,7 +62,7 @@ namespace UserController {
             return null;
         } else {
             $result = $result[0];
-            return new \User($result[0], $result[1], $result[2], $result[3], $result[4]);
+            return new \User($result[0], $result[1], $result[2], $result[3], $result[4], $result[5], $result[6], $result[7], $result[8]);
         }
     }
 
@@ -76,25 +76,15 @@ namespace UserController {
 
     function isCreator($username) {
         if (isset($username)) {
-            $statement = "SELECT roles FROM userinfo WHERE username = '{$username}'";
+            $statement = "SELECT admin FROM userinfo WHERE username = '$username'";
             $result = \DBHandler::execute($statement, true);
 
             if (count($result) != 1) {
                 return false;
             } else {
-                return $result[0]['ROLES'] == 'creator' || $result[0]['ROLES'] == 'admin';
+                $result = $result[0];
+                return $result[7] == 0 || $result[7] == 1;
             }
-        } else {
-            return false;
-        }
-    }
-
-    function isContributor($username) {
-        if (isset($username)) {
-            $statement = "SELECT * FROM userinfo WHERE username = '{$username}'";
-            $result = \DBHandler::execute($statement, true);
-
-            return count($result) == 1;
         } else {
             return false;
         }
@@ -105,7 +95,7 @@ namespace UserController {
             $statement = "SELECT * FROM userinfo WHERE username = '{$username}'";
             $result = \DBHandler::execute($statement, true);
 
-            return count($result) == 1 && $result[0]['ROLES'] == 'admin';
+            return count($result) == 1 && $result[0][7] == 1;
         } else {
             return false;
         }

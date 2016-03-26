@@ -15,16 +15,9 @@
     <h3 class="masthead-brand">Share It</h3>
     <nav>
       <ul class="nav masthead-nav">
+          
         <li class="<?php echo isActive('Home'); ?>"><a href="index.php">Home</a></li>
-        <li class="<?php echo isActive('Projects'); ?>"><a href="project.php">Projects</a></li>
-        <?php
-          if (UserController\isAdmin($_SESSION["username"])) {
-            ?>
-        <li class="<?php echo isActive('Users'); ?>"><a href="user_list.php">Users</a></li>
-        <li class="<?php echo isActive('Contributions'); ?>"><a href="contribution.php">Contributions</a></li>
-        <?php
-          }
-            ?>
+        <li class="<?php echo isActive('Items'); ?>"><a href="itemList.php">Items</a></li>
 
         <?php
           if (isset($_SESSION["username"])) {
