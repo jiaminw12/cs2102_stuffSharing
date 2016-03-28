@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $_POST["address"];
     $contact_num = $_POST["contact_num"];
     $date_of_birth = $_POST["date_of_birth"];
-    echo $date_of_birth;
     $verify_password = $_POST["verify_password"];
     if ($password !== $verify_password) {
         $message = "Password doesn't match";
@@ -89,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input class="form-control" id="address" name="address" placeholder="Address" required type="text">
             </div> 
             <div class="form-group ">
-                <input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="Date" required type="text">
+                <input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="Date of Birth" required type="text">
             </div>
             <div class="form-group ">
                 <input class="form-control" id="password" name="password" placeholder="Password" required type="password">

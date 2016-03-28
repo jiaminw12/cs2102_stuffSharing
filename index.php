@@ -1,11 +1,6 @@
 <?php
 session_start();
 $current_page = 'Home';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $fullname = $_POST["fullname"];
-    
-}
 ?>
 
 <?php ob_start(); ?>
