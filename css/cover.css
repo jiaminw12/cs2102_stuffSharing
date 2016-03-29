@@ -268,3 +268,7 @@ body > div > div > div > div.inner.cover.container button a {
 .fileinput-new .input-group .btn-file.btn-lg {
   border-radius: 0 6px 6px 0;
 }
+
+.black {
+    color: #000;
+}

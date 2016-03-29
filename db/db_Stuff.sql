@@ -13,7 +13,7 @@ SET search_path = public, pg_catalog;
 
 ALTER TABLE ONLY public.userinfo DROP CONSTRAINT userinfo_pkey;
 ALTER TABLE ONLY public.items DROP CONSTRAINT items_pkey;
-ALTER TABLE public.items ALTER COLUMN "itemID" DROP DEFAULT;
+ALTER TABLE public.items ALTER COLUMN item_id DROP DEFAULT;
 DROP TABLE public.userinfo;
 DROP SEQUENCE public."items_itemID_seq";
 DROP TABLE public.items;
@@ -60,11 +60,11 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE items (
-    "itemID" integer NOT NULL,
+    item_id integer NOT NULL,
     owner character varying(256) NOT NULL,
     item_title character varying(256) NOT NULL,
     description text,
-    category character varying(9) NOT NULL,
+    category character varying(128) NOT NULL,
     min_bid integer DEFAULT 0 NOT NULL,
     pickup_location character varying(256) NOT NULL,
     return_location character varying(256) NOT NULL,
@@ -95,7 +95,7 @@ ALTER TABLE "items_itemID_seq" OWNER TO postgres;
 -- Name: items_itemID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE "items_itemID_seq" OWNED BY items."itemID";
+ALTER SEQUENCE "items_itemID_seq" OWNED BY items.item_id;
 
 
 --
@@ -109,7 +109,7 @@ CREATE TABLE userinfo (
     password text NOT NULL,
     contact_num character(10) NOT NULL,
     address character varying(256) NOT NULL,
-    date_of_birth character varying(10) NOT NULL,
+    date_of_birth date NOT NULL,
     admin smallint DEFAULT 0,
     bid_point integer DEFAULT 1000
 );
@@ -118,30 +118,23 @@ CREATE TABLE userinfo (
 ALTER TABLE userinfo OWNER TO postgres;
 
 --
--- Name: itemID; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: item_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY items ALTER COLUMN "itemID" SET DEFAULT nextval('"items_itemID_seq"'::regclass);
-
-
---
--- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
+ALTER TABLE ONLY items ALTER COLUMN item_id SET DEFAULT nextval('"items_itemID_seq"'::regclass);
 
 --
 -- Name: items_itemID_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"items_itemID_seq"', 1, false);
+SELECT pg_catalog.setval('"items_itemID_seq"', 17, true);
 
 
 --
 -- Data for Name: userinfo; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO userinfo VALUES ('a', 'aaa@aa.com', 'a', 'c4ca4238a0b923820dcc509a6f75849b', '1         ', '1', '03/02/2016', 0, 1000);
+INSERT INTO userinfo VALUES ('a', 'aaa@aaa.com', 'aaa', 'c4ca4238a0b923820dcc509a6f75849b', '111       ', 'srer', '2016-03-03', 0, 1000);
 
 
 --
@@ -149,7 +142,7 @@ INSERT INTO userinfo VALUES ('a', 'aaa@aa.com', 'a', 'c4ca4238a0b923820dcc509a6f
 --
 
 ALTER TABLE ONLY items
-    ADD CONSTRAINT items_pkey PRIMARY KEY ("itemID", owner, item_title);
+    ADD CONSTRAINT items_pkey PRIMARY KEY (item_id, owner, item_title);
 
 
 --

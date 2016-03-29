@@ -8,6 +8,7 @@ date_default_timezone_set("Asia/Singapore");
 
 class Item {
 
+    private $item_id;
     private $owner;
     private $title;
     private $description;
@@ -21,13 +22,12 @@ class Item {
     private $item_image;
 
     private function save() {
-        $this->deadline = \DateHelper\convertToSqlFormatFromString($this->deadline);
-        $statement = "UPDATE items SET owner='{$this->owner}', description='{$this->description}', category='{$this->category}', min_bid='{$this->min_bid}', pickup_location='{$this->pickup_location}', return_location='{$this->return_location}', borrow_start_date='{$this->borrow_start_date}', borrow_end_date='{$this->$borrow_end_date}', bid_end_date='{$this->bid_end_date}', item_image='{$this->item_image}' WHERE item_title='{$this->item_title}'";
-        $this->deadline = \DateHelper\beautifyDateFromSql($this->deadline);
+        $statement = "UPDATE items SET owner='{$this->owner}', item_title='{$this->item_title}', description='{$this->description}', category='{$this->category}', min_bid='{$this->min_bid}', pickup_location='{$this->pickup_location}', return_location='{$this->return_location}', borrow_start_date='{$this->borrow_start_date}', borrow_end_date='{$this->$borrow_end_date}', bid_end_date='{$this->bid_end_date}', item_image='{$this->item_image}' WHERE item_id='{$this->item_id}'";
         return DBHandler::execute($statement, false);
     }
 
-    public function __construct($owner, $item_title, $description, $category, $min_bid, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image) {
+    public function __construct($item_id, $owner, $item_title, $description, $category, $min_bid, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image) {
+        $thid->item_id = $item_id;
         $this->owner = $owner;
         $this->item_title = $item_title;
         $this->description = $description;
@@ -39,6 +39,10 @@ class Item {
         $this->borrow_end_date = $borrow_end_date;
         $this->bid_end_date = $bid_end_date;
         $this->item_image = $item_image;
+    }
+    
+    public function getItemId() {
+        return $this->item_id;
     }
 
     public function getOwner() {
@@ -140,11 +144,11 @@ class Item {
     }
 
     public function getBidList() {
-        $statement = "SELECT * FROM bid WHERE item_title = {$this->item_title} ORDER BY bid_date DESC";
+        $statement = "SELECT * FROM bid WHERE item_id = {$this->item_id} ORDER BY bid_date DESC";
 
         $result = DBHandler::execute($statement, true);
 
-        $contributions = array();
+        $bids= array();
         foreach ($result as $res) {
             $res[3] = \DateHelper\beautifyDateFromSql($res[3]);
             $bids[] = new Bid($res[0], $res[1], $res[2], $res[3], $res[4]);
@@ -154,7 +158,7 @@ class Item {
     }
 
     public function getBidPoint() {
-        $statement = "SELECT MAX(bid_point) FROM bid WHERE WHERE item_title = {$this->item_title}";
+        $statement = "SELECT MAX(bid_point) FROM bid WHERE WHERE item_id= {$this->item_id}";
 
         $result = DBHandler::execute($statement, true);
 

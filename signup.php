@@ -10,8 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include_once("controller/UserController.php");
     $fullname = $_POST["fullname"];
     $roles = $_POST["roles"];
-    if($roles == "admin"){
-       $admin = 1;
+    if ($roles == "admin") {
+        $admin = 1;
     } else {
         $admin = 0;
     }
@@ -52,9 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script type="text/javascript">
     // When the document is ready
     $(document).ready(function() {
-
-        $('#date_of_birth').datepicker();
-
+        $('#date_of_birth').datepicker({});
     });
 </script>
 
@@ -88,7 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input class="form-control" id="address" name="address" placeholder="Address" required type="text">
             </div> 
             <div class="form-group ">
-                <input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="Date of Birth" required type="text">
+                <div class='input-group date'>
+                    <input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="Date of Birth" required type="text" data-format="yyyy-MM-dd">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
             <div class="form-group ">
                 <input class="form-control" id="password" name="password" placeholder="Password" required type="password">

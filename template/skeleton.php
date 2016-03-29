@@ -21,7 +21,6 @@ date_default_timezone_set("Asia/Singapore");
         <title>Share It!</title>
 
         <link rel="stylesheet" href="css/datepicker.css">
-        
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
