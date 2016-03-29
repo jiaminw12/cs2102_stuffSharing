@@ -5,8 +5,8 @@ namespace UserController {
     include_once __DIR__ . '/../db/DBHandler.php';
     include_once __DIR__ . '/../model/User.php';
 
-//include_once __DIR__ . '/ContributionController.php';
-//include_once __DIR__ . '/ProjectController.php';
+//include_once __DIR__ . '/BidController.php';
+//include_once __DIR__ . '/ItemController.php';
 
     function signIn($username, $password) {
         $user = getUser($username);
@@ -44,7 +44,6 @@ namespace UserController {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
             return null;
         } else {
-
             $statement = "INSERT INTO userinfo(username, name, email, password, contact_num, address, date_of_birth, admin) VALUES('" . $username . "', '" . $name . "', '" . $email . "', '" . $password . "', '" . $contact_num ."', '" . $address ."', '" . $date_of_birth . "', '" . $admin . "')";
 
             $r = \DBHandler::execute($statement, false);
@@ -124,16 +123,16 @@ namespace UserController {
         return $activeUser && $userToModify && $activeUser->canModifyUser($userToModify);
     }
 
-    function canActiveUserModifyProject($projectId) {
+    function canActiveUserModifyItem($itemiD) {
         $activeUser = getActiveUser();
-        $projectToModify = \ProjectController\getProject($projectId);
-        return $activeUser && $projectToModify && $activeUser->canModifyProject($projectToModify);
+        $itemToModify = \ItemController\getProject($itemiD);
+        return $activeUser && $itemToModify && $activeUser->canModifyProject($itemtToModify);
     }
 
-    function canActiveUserModifyContribution($contributionId) {
+    function canActiveUserModifyBid($bid) {
         $activeUser = getActiveUser();
-        $contributionToModify = \ContributionController\getContribution($contributionId);
-        return $activeUser && $contributionToModify && $activeUser->canModifyContribution($contributionToModify);
+        $bidToModify = \BidController\getBid($itemID);
+        return $activeUser && $bidToModify && $activeUser->canModifyBid($bidToModify);
     }
 
     function removeUser($username) {
