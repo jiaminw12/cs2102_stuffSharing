@@ -44,6 +44,10 @@ class Item {
     public function getItemId() {
         return $this->item_id;
     }
+    
+    public function getItemTitle() {
+        return $this->item_title;
+    }
 
     public function getOwner() {
         return $this->owner;

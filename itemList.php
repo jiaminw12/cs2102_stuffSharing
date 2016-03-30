@@ -128,11 +128,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="tab-content">
+        
         <div role="tabpanel" class="tab-pane fade in active" id="all">
             <?php
             $itemList = ItemController\getAllItems();
             foreach ($itemList as $item) {
                 ?>
+                <div class="row">
+                    <hr/>
+                    <div class="col-md-6">
+                        <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
+                            <img src="uploadFiles/<?php echo $item->getItemImage(); ?>" class="img-responsive" alt="" style="height: 150px;">
+                            <button type="button" class="btn btn-success btn-xs">
+                                <a href="itemList.php?page=<?php echo $item->getCategory(); ?>">
+                                    <?php echo $item->getCategory(); ?>
+                                </a>
+                            </button></h4>
+                    </div>
+                </div>
             <?php } ?>
         </div>
 
