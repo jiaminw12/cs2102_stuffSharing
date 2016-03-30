@@ -269,20 +269,3 @@ SELECT * FROM borrow;
 
 
 ---------------------------------------------------------------------------------------------------------------------------
--- Some useful queries
-
--- For owners who wants to see what items they have:
-SELECT i.name, i.description, i.category, i.startBidpt, i.available
-FROM ITEM i
-WHERE i.owner = 'zhanghong2011@msn.com';
-
-
--- For users who are searching for a particular category of items:
-SELECT i.name, i.description, i.category, i.startBidpt
-FROM ITEM i
-WHERE i.category = 'KITCHEN WARE';
-
-
--- Notification of the time and location to pick up the item
-
-
