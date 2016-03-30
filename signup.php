@@ -15,12 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $admin = 0;
     }
+    echo $admin;
     $username = $_POST["username"];
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $address = $_POST["address"];
     $contact_num = $_POST["contact_num"];
-    $date_of_birth = $_POST["date_of_birth"];
     $verify_password = $_POST["verify_password"];
     if ($password !== $verify_password) {
         $message = "Password doesn't match";
@@ -29,15 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "User created";
         $message_type = "success";
 
-        $user = UserController\createNewUser($username, $fullname, $email, $password, $contact_num, $address, $date_of_birth, $admin);
+        $user = UserController\createNewUser($username, $email, $fullname, $password, $contact_num, $admin);
 
         if (isset($user)) {
             unset($fullname);
             unset($username);
             unset($email);
             unset($contact_num);
-            unset($address);
-            unset($date_of_birth);
             unset($admin);
         } else {
             $message = "Username or email already exists or invalid email format";
@@ -71,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input class="form-control" id="fullname" name="fullname" placeholder="Full Name" required type="text" value="<?php echo $fullname ?>">
             </div>
             <div class="form-group">
-                <select class="form-control" id="admin" name="admin" selected="<?php echo $admin ?>">
+                <select class="form-control" id="roles" name="roles" selected="<?php echo $admin ?>">
                     <option <?php echo $admin == 'user' ? "selected" : ""; ?> value="creator">User</option>
                     <option <?php echo $admin == 'admin' ? "selected" : ""; ?> value="contributor">Administrator</option>
                 </select>
@@ -81,17 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="form-group ">
                 <input class="form-control" id="contact_num" name="contact_num" placeholder="Contact Number" required type="tel">
-            </div>
-            <div class="form-group ">
-                <input class="form-control" id="address" name="address" placeholder="Address" required type="text">
-            </div> 
-            <div class="form-group ">
-                <div class='input-group date'>
-                    <input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="Date of Birth" required type="text" data-format="yyyy-MM-dd">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
             </div>
             <div class="form-group ">
                 <input class="form-control" id="password" name="password" placeholder="Password" required type="password">

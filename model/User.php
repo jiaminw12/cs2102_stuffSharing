@@ -9,28 +9,23 @@ date_default_timezone_set("Asia/Singapore");
 
 class User {
 
-    private $username;
     private $name;
     private $admin;
     private $email;
     private $password;
-    private $address;
     private $contact_num;
-    private $date_of_birth;
 
     private function save() {
-        $statement = "UPDATE userinfo SET name='{$this->name}', email='{$this->email}', password='{$this->password}, contact_num='{$this->contact_num}', address='{$this->address}', date_of_birth='{$this->date_of_birth}', admin='{$this->admin}'' WHERE username='{$this->username}'";
+        $statement = "UPDATE userinfo SET name='{$this->name}', email='{$this->email}', password='{$this->password}, contact_num='{$this->contact_num}',admin='{$this->admin}'' WHERE username='{$this->username}'";
         return DBHandler::execute($statement, false);
     }
 
-    public function __construct($username, $name, $email, $password, $contact_num, $address, $date_of_birth, $admin) {
+    public function __construct($username, $email, $name, $password, $contact_num, $admin) {
         $this->username = $username;
-        $this->name = $name;
         $this->email = $email;
+        $this->name = $name;
         $this->password = $password;
         $this->contact_num = $contact_num;
-        $this->address = $address;
-        $this->date_of_birth = $date_of_birth;
         $this->admin = $admin;
     }
 
@@ -97,16 +92,6 @@ class User {
         $this->contact_num = $contact_num;
         return $this->save();
     }
-
-    public function getAddress() {
-        return $this->address;
-    }
-
-    public function setAddress($address) {
-        $this->address = $address;
-        return $this->save();
-    }
-    
 }
 
 ?>

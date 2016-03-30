@@ -92,6 +92,11 @@ class Item {
     public function getItemImage() {
         return $this->item_image;
     }
+    
+    public function setItemId($item_id){
+        $this->item_id = $item_id;
+        return $this->save();
+    }
 
     public function setTitle($title) {
         $this->title = $title;

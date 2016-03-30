@@ -11,12 +11,20 @@ SET client_min_messages = warning;
 
 SET search_path = public, pg_catalog;
 
+ALTER TABLE ONLY public.items DROP CONSTRAINT items_owner_fkey;
+ALTER TABLE ONLY public.borrows DROP CONSTRAINT borrows_userinfo_fkey;
+ALTER TABLE ONLY public.borrows DROP CONSTRAINT borrows_items_fkey;
+ALTER TABLE ONLY public.bids DROP CONSTRAINT bids_userinfo_fkey;
+ALTER TABLE ONLY public.bids DROP CONSTRAINT bids_items_fkey;
+ALTER TABLE ONLY public.userinfo DROP CONSTRAINT userinfo_username_key;
 ALTER TABLE ONLY public.userinfo DROP CONSTRAINT userinfo_pkey;
 ALTER TABLE ONLY public.items DROP CONSTRAINT items_pkey;
-ALTER TABLE public.items ALTER COLUMN item_id DROP DEFAULT;
+ALTER TABLE ONLY public.borrows DROP CONSTRAINT borrows_pkey;
+ALTER TABLE ONLY public.bids DROP CONSTRAINT bids_pkey;
 DROP TABLE public.userinfo;
-DROP SEQUENCE public."items_itemID_seq";
 DROP TABLE public.items;
+DROP TABLE public.borrows;
+DROP TABLE public.bids;
 DROP EXTENSION plpgsql;
 DROP SCHEMA public;
 --
@@ -56,21 +64,52 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: bids; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE bids (
+    owner character varying(256) NOT NULL,
+    bidder character varying(256) NOT NULL,
+    item_id character varying(256) NOT NULL,
+    bid_point integer NOT NULL,
+    created_date timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE bids OWNER TO postgres;
+
+--
+-- Name: borrows; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE borrows (
+    owner character varying(256) NOT NULL,
+    borrower character varying(256) NOT NULL,
+    item_id character varying(256) NOT NULL,
+    status smallint DEFAULT 0 NOT NULL,
+    created_date timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE borrows OWNER TO postgres;
+
+--
 -- Name: items; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE items (
-    item_id integer NOT NULL,
+    item_id character varying(256) NOT NULL,
     owner character varying(256) NOT NULL,
     item_title character varying(256) NOT NULL,
     description text,
-    category character varying(128) NOT NULL,
-    min_bid integer DEFAULT 0 NOT NULL,
+    category character varying(50) NOT NULL,
+    bid_point_status smallint NOT NULL,
+    available smallint DEFAULT 1,
     pickup_location character varying(256) NOT NULL,
     return_location character varying(256) NOT NULL,
     borrow_start_date date NOT NULL,
     borrow_end_date date NOT NULL,
-    bid_end_date timestamp with time zone NOT NULL,
+    bid_end_date timestamp with time zone,
     item_image text
 );
 
@@ -78,38 +117,15 @@ CREATE TABLE items (
 ALTER TABLE items OWNER TO postgres;
 
 --
--- Name: items_itemID_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE "items_itemID_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE "items_itemID_seq" OWNER TO postgres;
-
---
--- Name: items_itemID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE "items_itemID_seq" OWNED BY items.item_id;
-
-
---
 -- Name: userinfo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE userinfo (
-    username character varying(256) NOT NULL,
+    username character varying(128) NOT NULL,
     email character varying(256) NOT NULL,
     name character varying(256) NOT NULL,
     password text NOT NULL,
-    contact_num character(10) NOT NULL,
-    address character varying(256) NOT NULL,
-    date_of_birth date NOT NULL,
+    contact_num character varying(10) NOT NULL,
     admin smallint DEFAULT 0,
     bid_point integer DEFAULT 1000
 );
@@ -118,23 +134,43 @@ CREATE TABLE userinfo (
 ALTER TABLE userinfo OWNER TO postgres;
 
 --
--- Name: item_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Data for Name: bids; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY items ALTER COLUMN item_id SET DEFAULT nextval('"items_itemID_seq"'::regclass);
+
 
 --
--- Name: items_itemID_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Data for Name: borrows; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"items_itemID_seq"', 17, true);
+
+
+--
+-- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
 -- Data for Name: userinfo; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO userinfo VALUES ('a', 'aaa@aaa.com', 'aaa', 'c4ca4238a0b923820dcc509a6f75849b', '111       ', 'srer', '2016-03-03', 0, 1000);
+
+
+--
+-- Name: bids_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY bids
+    ADD CONSTRAINT bids_pkey PRIMARY KEY (owner, item_id, bid_point);
+
+
+--
+-- Name: borrows_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY borrows
+    ADD CONSTRAINT borrows_pkey PRIMARY KEY (owner, item_id);
 
 
 --
@@ -142,7 +178,7 @@ INSERT INTO userinfo VALUES ('a', 'aaa@aaa.com', 'aaa', 'c4ca4238a0b923820dcc509
 --
 
 ALTER TABLE ONLY items
-    ADD CONSTRAINT items_pkey PRIMARY KEY (item_id, owner, item_title);
+    ADD CONSTRAINT items_pkey PRIMARY KEY (item_id, owner);
 
 
 --
@@ -150,7 +186,55 @@ ALTER TABLE ONLY items
 --
 
 ALTER TABLE ONLY userinfo
-    ADD CONSTRAINT userinfo_pkey PRIMARY KEY (username, email);
+    ADD CONSTRAINT userinfo_pkey PRIMARY KEY (email);
+
+
+--
+-- Name: userinfo_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY userinfo
+    ADD CONSTRAINT userinfo_username_key UNIQUE (username);
+
+
+--
+-- Name: bids_items_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY bids
+    ADD CONSTRAINT bids_items_fkey FOREIGN KEY (owner, item_id) REFERENCES items(owner, item_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: bids_userinfo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY bids
+    ADD CONSTRAINT bids_userinfo_fkey FOREIGN KEY (bidder) REFERENCES userinfo(email) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: borrows_items_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY borrows
+    ADD CONSTRAINT borrows_items_fkey FOREIGN KEY (owner, item_id) REFERENCES borrows(owner, item_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: borrows_userinfo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY borrows
+    ADD CONSTRAINT borrows_userinfo_fkey FOREIGN KEY (borrower) REFERENCES userinfo(email) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: items_owner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT items_owner_fkey FOREIGN KEY (owner) REFERENCES userinfo(email) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

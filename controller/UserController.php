@@ -38,13 +38,13 @@ namespace UserController {
         }
     }
 
-    function createNewUser($username, $name, $email, $password, $contact_num, $address, $date_of_birth, $admin) {
+    function createNewUser($username, $email, $name, $password, $contact_num, $admin) {
         $password = md5($password);
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
             return null;
         } else {
-            $statement = "INSERT INTO userinfo(username, name, email, password, contact_num, address, date_of_birth, admin) VALUES('" . $username . "', '" . $name . "', '" . $email . "', '" . $password . "', '" . $contact_num ."', '" . $address ."', '" . $date_of_birth . "', '" . $admin . "')";
+            $statement = "INSERT INTO userinfo(username, email, name, password, contact_num, admin) VALUES('" . $username . "', '" . $email . "', '" . $name . "', '" . $password . "', '" . $contact_num ."', '" . $admin . "')";
 
             $r = \DBHandler::execute($statement, false);
             
@@ -61,7 +61,7 @@ namespace UserController {
             return null;
         } else {
             $result = $result[0];
-            return new \User($result[0], $result[1], $result[2], $result[3], $result[4], $result[5], $result[6], $result[7], $result[8]);
+            return new \User($result[0], $result[1], $result[2], $result[3], $result[4], $result[5], $result[6]);
         }
     }
 
@@ -82,7 +82,7 @@ namespace UserController {
                 return false;
             } else {
                 $result = $result[0];
-                return $result[7] == 0 || $result[7] == 1;
+                return $result[6] == 0 || $result[6] == 1;
             }
         } else {
             return false;
@@ -94,7 +94,7 @@ namespace UserController {
             $statement = "SELECT * FROM userinfo WHERE username = '{$username}'";
             $result = \DBHandler::execute($statement, true);
 
-            return count($result) == 1 && $result[0][7] == 1;
+            return count($result) == 1 && $result[0][6] == 1;
         } else {
             return false;
         }
@@ -111,7 +111,7 @@ namespace UserController {
 
         $userList = array();
         foreach ($result as $res) {
-            $userList[] = new \User($res['USERNAME'], $res['NAME'], $res['ROLES'], $res['EMAIL'], $res['PASSWORD']);
+            $userList[] = new \User($res[0], $res[1], $res[2], $res[3], $res[4], $res[5]);
         }
 
         return $userList;

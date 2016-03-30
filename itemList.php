@@ -8,6 +8,33 @@ include_once "controller/CategoryController.php";
 $default_page = "all";
 $page = $default_page;
 
+function crypto_rand_secure($min, $max) {
+    $range = $max - $min;
+    if ($range < 1)
+        return $min; // not so random...
+    $log = ceil(log($range, 2));
+    $bytes = (int) ($log / 8) + 1; // length in bytes
+    $bits = (int) $log + 1; // length in bits
+    $filter = (int) (1 << $bits) - 1; // set all lower bits to 1
+    do {
+        $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
+        $rnd = $rnd & $filter; // discard irrelevant bits
+    } while ($rnd >= $range);
+    return $min + $rnd;
+}
+
+function getToken($length) {
+    $token = "";
+    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
+    $codeAlphabet.= "0123456789";
+    $max = strlen($codeAlphabet) - 1;
+    for ($i = 0; $i < $length; $i++) {
+        $token .= $codeAlphabet[crypto_rand_secure(0, $max)];
+    }
+    return $token;
+}
+
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
 }
@@ -39,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    $item_id = getToken(20);
     $item_title = $_POST["item_title"];
     $description = $_POST["description"];
     $category = $_POST["category"];
@@ -54,14 +82,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $borrow_end_date = $_POST["borrow_end_date"];
     $bid_end_date = $_POST["bid_end_date"];
 
-    if ($borrow_start_date < $bid_end_date || $borrow_end_date < $bid_end_date){
-         $errors[] = "Borrow end date must be after borrow start date.";
+    if ($borrow_start_date < $bid_end_date || $borrow_end_date < $bid_end_date) {
+        $errors[] = "Borrow end date must be after borrow start date.";
     }
-    
+
     if ($borrow_end_date - $borrow_start_date < 0) {
         $errors[] = "Borrow end date must be after borrow start date.";
     }
-    
+
     $time = $_POST["hours"] . ":" . $_POST["minutes"] . ":" . $_POST["seconds"];
 
     if (empty($errors) == true) {
@@ -77,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $bid_end_date = $bid_end_date . " " . $time;
         $item_image = $file_name;
-        $items = ItemController\createNewItem($item_title, $description, $category, $min_bid, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image);
+        $items = ItemController\createNewItem($item_id, $item_title, $description, $category, $min_bid, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image);
         move_uploaded_file($file_tmp, "uploadFiles/" . $file_name);
         $message = "New item added";
         $message_type = "success";
@@ -95,6 +123,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $('#bid_end_date').datepicker({});
         $('#borrow_start_date').datepicker({});
         $('#borrow_end_date').datepicker({});
+
+        $("#bid_point_status").change(function() {
+            $(this).find("option:selected").each(function() {
+                if ($(this).attr("value") == "yes") {
+                    $("#bid_timming").removeClass('hidden');
+                } else {
+                    $("#bid_timming").addClass('hidden');
+                }
+            });
+        }).change();
+
     });
 
 </script>
@@ -128,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="tab-content">
-        
+
         <div role="tabpanel" class="tab-pane fade in active" id="all">
             <?php
             $itemList = ItemController\getAllItems();
@@ -175,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input class="form-control" id="item_title" name="item_title" placeholder="Title" required type="text" value="">
                     </div>
                     <div class="form-group ">
-                        <textarea class="form-control" rows="10" id="description" name="description" placeholder="Description" ></textarea>
+                        <textarea class="form-control" rows="5" id="description" name="description" placeholder="Description" ></textarea>
                     </div>
 
                     <div class="form-group">
@@ -189,18 +228,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="form-group">
-                        <div class='input-group date'>
-                            <input class="form-control" id="bid_end_date" name="bid_end_date" placeholder="Bid End Date" required type="text">
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+                        <div class="controls form-inline">
+                            <span class="black">Free For Lending: </span> 
+                            <select class="form-control" id="bid_point_status" name="bid_point_status">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="form-group">
                             <div class="control-group">
-                                <div class="controls form-inline">
+                                <div class="controls form-inline hidden" id="bid_timming">
                                     <span class="black">Hour : </span> 
                                     <select class="form-control" id="hours" name="hours">
                                         <?php
