@@ -8,10 +8,10 @@ class DBHandler {
         global $config;
         try {
             $dbuser = 'postgres';
-            $dbpass = '12345';
+            $dbpass = 'Password01';
             $host = 'localhost';
             $dbname = 'db_Stuff';
-            $this->dbh = pg_pconnect("host=localhost port=5432 dbname=db_Stuff user=postgres password=12345");
+            $this->dbh = pg_pconnect("host=localhost port=5432 dbname=db_Stuff user=postgres password=Password01");
         } catch (PDOException $e) {
             echo "Error : " . $e->getMessage() . "<br/>";
             die();
