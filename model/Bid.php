@@ -4,67 +4,71 @@ include_once __DIR__ . '/../db/DBHandler.php';
 include_once __DIR__ . '/../helper/DateHelper.php';
 
 class Bid {
+
+    private $owner;
+    private $bidder;
+    private $item_id;
+    private $bid_point;
+    private $created_date;
+
+    private function save() {
+        $statement = "UPDATE bid SET bid_point={$this->bid_point} ' WHERE item_id={$this->item_id} ' AND ' bidder='{$this->bidder} ' AND ' owner='{$this->owner}";
+        return DBHandler::execute($statement, false);
+    }
+
+    public function __construct($owner, $bidder, $item_id, $bid_point, $created_date) {
+        $this->owner = $owner;
+        $this->bidder = $bidder;
+        $this->item_id = $item_id;
+        $this->bid_point = $bid_point;
+        $this->created_date = $created_date;
+    }
+
+    public function getOwner() {
+        return $this->owner;
+    }
+
+    public function getBidder() {
+        return $this->bidder;
+    }
+
+    public function getItemId() {
+        return $this->item_id;
+    }
+
+    public function getBidPoint() {
+        return $this->bid_point;
+    }
     
-  private $owner;
-  private $borrower;
-  private $item_title;
-  private $bid_date;
-  private $bid_point;
+    public function getCreatedDate() {
+        return $this->created_date;
+    }
 
-  private function save() {
-    $this->bid_date = \DateHelper\convertToSqlFormatFromString($this->bid_date);
-    $statement = "UPDATE bid SET $bid_date='{$this->$bid_date}, bid_point={$this->bid_point} ' WHERE item_title={$this->item_title} ' AND ' borrower='{$this->borrower} ' AND ' owner='{$this->owner}";
-    $this->bid_date = \DateHelper\beautifyDateFromSql($this->bid_date);
-    return DBHandler::execute($statement, false);
-  }
+    public function setOwner($owner) {
+        $this->owner = $owner;
+        return $this->save();
+    }
 
-  public function __construct($owner, $borrower, $item_title, $bid_date, $bid_point) {
-    $this->owner = $owner;
-    $this->borrower = $borrower;
-    $this->item_title = $item_title;
-    $this->bid_date = $bid_date;
-    $this->bid_point = $bid_point;
-  }
+    public function setBidder($bidder) {
+        $this->bidder = $bidder;
+        return $this->save();
+    }
 
-  public function getOwner() {
-    return $this->owner;
-  }
+    public function setItemId($item_id) {
+        $this->item_id = intval($item_id);
+        return $this->save();
+    }
 
-  public function getBorrower() {
-    return $this->borrower;
-  }
+    public function setBidPoint($bid_point) {
+        $this->bid_point = $bid_point;
+        return $this->save();
+    }
+    
+        public function setCreatedDate($created_date) {
+        $this->created_date = $created_date;
+        return $this->save();
+    }
 
-  public function getItemTitle() {
-    return $this->item_title;
-  }
-
-  public function getDate() {
-    return $this->$bid_date;
-  }
-
-  public function getBidPoint() {
-    return $this->bid_point;
-  }
-
-  public function setBorrower($borrower) {
-    $this->borrower = $borrower;
-    return $this->save();
-  }
-
-  public function setItemTitle($item_title) {
-    $this->item_title = intval($item_title);
-    return $this->save();
-  }
-
-  public function setBidDate($bid_date) {
-    $this->bid_date = $bid_date;
-    return $this->save();
-  }
-
-  public function setBidPoint($bid_point) {
-    $this->bid_point = $bid_point;
-    return $this->save();
-  }
-  
 }
+
 ?>

@@ -52,7 +52,7 @@ namespace UserController {
             header('Location:' . 'index.php');
         }
     }
-
+    
     function getUser($username) {
         $statement = "SELECT * FROM userinfo WHERE username ='" .  $username ."'";
         $result = \DBHandler::execute($statement, true);
@@ -82,7 +82,7 @@ namespace UserController {
                 return false;
             } else {
                 $result = $result[0];
-                return $result[6] == 0 || $result[6] == 1;
+                return $result[5] == 0 || $result[5] == 1;
             }
         } else {
             return false;
