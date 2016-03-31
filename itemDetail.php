@@ -35,7 +35,8 @@ if (!empty($_POST['submit_borrow'])) {
         ?>
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header"><?php echo $item->getItemTitle(); ?> by <?php echo UserController\getUserEmail($item->getOwner()) ?></h1>
+               
+                <h1 class="page-header"><?php echo $item->getItemTitle(); ?> by <?php echo UserController\getUsername($item->getOwner()) ?></h1>
             </div>
         </div>
         <!-- /.row -->
@@ -43,11 +44,11 @@ if (!empty($_POST['submit_borrow'])) {
         <!-- Portfolio Item Row -->
         <div class="row">
 
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <img class="img-responsive" src="uploadFiles/<?php echo $item->getItemImage(); ?>" alt="" style="height: 150px;">
             </div>
 
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <h3>Project Description</h3>
                 <p><?php echo $item->getDescription(); ?></p>
                 <p><?php echo $item->getPickupLocation(); ?></p>
@@ -57,7 +58,7 @@ if (!empty($_POST['submit_borrow'])) {
                 <?php echo $_SESSION["username"]; ?>
                 
                 <?php
-    if (UserController\isSignedIn() && !(UserController\isCreator(($_SESSION["username"]))) && $item->getBidPointStatus() > 0 ) {
+    if (UserController\isSignedIn()) {
         ?>
               <span class="black"> hhhhhhhhhhhhhhhhhh </span>
         <form method="POST" class="form" role="form" enctype="multipart/form-data">

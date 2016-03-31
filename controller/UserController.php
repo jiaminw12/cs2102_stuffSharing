@@ -65,14 +65,15 @@ namespace UserController {
         }
     }
     
-    function getUserEmail($email) {
-        $statement = "SELECT username FROM userinfo WHERE username ='" .  $email ."'";
+    function getUsername($email) {
+        $statement = "SELECT username FROM userinfo WHERE email ='" .  $email ."'";
         $result = \DBHandler::execute($statement, true);
-        
+
         if (count($result) != 1) {
             return null;
         } else {
-            return $result;
+            $result = $result[0];
+            return $result[0];
         }
     }
     
