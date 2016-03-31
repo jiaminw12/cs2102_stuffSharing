@@ -2,15 +2,12 @@
  session_start();
   $current_page = 'Profile';
   include_once "controller/UserController.php";
-<<<<<<< HEAD
   include_once "controller/ItemController.php";
 
   $username = $_SESSION["username"];
   
 ?>
 <?php
-=======
-
   $username = $_SESSION["username"];
 ?>
 
@@ -18,14 +15,12 @@
    <br/>
   <div class="inner cover container">
     <?php
->>>>>>> origin/master
         include_once 'template/message.php';
         if ($message_type != 'danger') {
           echo $message;
           echo $message_type;
         } else {}
       ?>
-<<<<<<< HEAD
 <?php
     $userList = UserController\getUser($username);
     $email = $userList->getEmail();
@@ -119,17 +114,9 @@
       
      
   </div> 
-=======
->>>>>>> origin/master
-      
+
       
 <?php
   $content = ob_get_clean();
   include_once 'template/skeleton.php';
-<<<<<<< HEAD
 ?>
-
-
-=======
-?>
->>>>>>> origin/master

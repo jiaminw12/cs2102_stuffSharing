@@ -48,11 +48,7 @@ if (isset($_GET['item_title'])) {
     }
 }
 
-<<<<<<< HEAD
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-=======
 if (isset($_POST['submit'])) {
->>>>>>> origin/master
     $errors = array();
     $file_name = $_FILES['image']['name'];
     $file_size = $_FILES['image']['size'];
@@ -75,19 +71,6 @@ if (isset($_POST['submit'])) {
     $description = $_POST["description"];
     $category = $_POST["category"];
     $bid_point_status = $_POST["bid_point_status"];
-<<<<<<< HEAD
-    
-    if ($bid_point_status == "yes"){
-        $bid_point_status = 1;
-        $bid_end_date = $_POST["bid_end_date"];
-        $time = $_POST["hours"] . ":" . $_POST["minutes"] . ":" . $_POST["seconds"];
-    } else {
-        $bid_point_status = 0;
-        $bid_end_date = "0000-00-00";
-        $time = "00::00::00";
-    }
-    
-=======
 
     if ($bid_point_status == "yes") {
         $bid_point_status = $_POST["min_bid_point"];
@@ -99,21 +82,15 @@ if (isset($_POST['submit'])) {
         $bid_end_date = "NULL";
     }
 
->>>>>>> origin/master
     $pickup_location = $_POST["pickup_location"];
     $return_location = $_POST["return_location"];
     $borrow_start_date = $_POST["borrow_start_date"];
     $borrow_end_date = $_POST["borrow_end_date"];
 
-<<<<<<< HEAD
-    if ($borrow_start_date < $bid_end_date || $borrow_end_date < $bid_end_date) {
-        $errors[] = "Borrow end date must be after borrow start date.";
-=======
     if ($bid_end_date != "NULL") {
         if ($borrow_start_date < $bid_end_date || $borrow_end_date < $bid_end_date) {
             $errors[] = "Borrow start date must be after bid end date.";
         }
->>>>>>> origin/master
     }
 
     if ($borrow_end_date - $borrow_start_date < 0) {
@@ -131,10 +108,6 @@ if (isset($_POST['submit'])) {
             // and now we have the unique file name for the upload file
             $file_name = $randName . '.' . $ext;
         }
-<<<<<<< HEAD
-        $bid_end_date = $bid_end_date . " " . $time;
-=======
->>>>>>> origin/master
         $item_image = $file_name;
         $items = ItemController\createNewItem($item_id, $item_title, $description, $category, $bid_point_status, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image);
         move_uploaded_file($file_tmp, "uploadFiles/" . $file_name);
@@ -150,8 +123,6 @@ if (isset($_POST['submit'])) {
 
 <script type="text/javascript">
 
-<<<<<<< HEAD
-=======
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -165,7 +136,6 @@ if (isset($_POST['submit'])) {
     }
     var today = yyyy + '-' + mm + '-' + dd;
 
->>>>>>> origin/master
     $(document).ready(function() {
         $('#bid_end_date').datepicker({});
         $('#borrow_start_date').datepicker({});
@@ -176,11 +146,6 @@ if (isset($_POST['submit'])) {
                 if ($(this).attr("value") == "yes") {
                     $("#bidDate").removeClass('hidden');
                     $("#bid_timming").removeClass('hidden');
-<<<<<<< HEAD
-                } else {
-                    $("#bidDate").addClass('hidden');
-                    $("#bid_timming").addClass('hidden');
-=======
                     $("#min_bid_point").removeClass('hidden');
                     document.getElementById("bid_end_date").value = today;
                 } else {
@@ -188,13 +153,10 @@ if (isset($_POST['submit'])) {
                     $("#bid_timming").addClass('hidden');
                     $("#min_bid_point").addClass('hidden');
                     document.getElementById("bid_end_date").value = "0000-00-00";
->>>>>>> origin/master
                 }
             });
         }).change();
 
-<<<<<<< HEAD
-=======
         $(function() {
             $('#all a.samePage').click(function(e) {
                 e.preventDefault();
@@ -222,7 +184,6 @@ if (isset($_POST['submit'])) {
             })
         });
 
->>>>>>> origin/master
     });
 
 </script>
@@ -235,11 +196,7 @@ if (isset($_POST['submit'])) {
             include_once 'template/message.php';
             ?>
             <div class="row"> 
-<<<<<<< HEAD
-                <ul class="nav nav-tabs" role="tablist">
-=======
                 <ul class="nav nav-tabs" role="tablist" id="myTab">
->>>>>>> origin/master
                     <li role="presentation" class="active"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">All</a></li>
                     <li role="presentation"><a href="#appliances" aria-controls="appliances" role="tab" data-toggle="tab">Appliances</a></li>
                     <li role="presentation"><a href="#book" aria-controls="book" role="tab" data-toggle="tab">Book</a></li>
@@ -270,14 +227,6 @@ if (isset($_POST['submit'])) {
                     <hr/>
                     <div class="col-md-6">
                         <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
-<<<<<<< HEAD
-                            <img src="uploadFiles/<?php echo $item->getItemImage(); ?>" class="img-responsive" alt="" style="height: 150px;">
-                            <button type="button" class="btn btn-success btn-xs">
-                                <a href="itemList.php?page=<?php echo $item->getCategory(); ?>">
-                                    <?php echo $item->getCategory(); ?>
-                                </a>
-                            </button></h4>
-=======
                             <button type="button" class="btn btn-success btn-xs">
                                 <a href="#<?php echo $item->getCategory(); ?>" class="samePage" data-toggle="tab">
                                     <?php echo $item->getCategory(); ?>
@@ -384,19 +333,11 @@ if (isset($_POST['submit'])) {
                             <p></p>
                             <a href="itemDetail.php?id=<?php echo $item->getItemId(); ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </h4>
->>>>>>> origin/master
                     </div>
                 </div>
             <?php } ?>
         </div>
 
-<<<<<<< HEAD
-        <div role="tabpanel" class="tab-pane fade" id="appliances">...</div>
-        <div role="tabpanel" class="tab-pane fade" id="book">...</div>
-        <div role="tabpanel" class="tab-pane fade" id="furniture">...</div>
-        <div role="tabpanel" class="tab-pane fade" id="tool">...</div>
-        <div role="tabpanel" class="tab-pane fade" id="others">...</div>
-=======
         <div role="tabpanel" class="tab-pane fade" id="others">
             <?php
             $itemList = ItemController\getSelectedItems("others");
@@ -420,17 +361,12 @@ if (isset($_POST['submit'])) {
                 </div>
             <?php } ?>
         </div>
->>>>>>> origin/master
 
         <?php
         if (UserController\isSignedIn() && UserController\isCreator($_SESSION["username"])) {
             ?>
             <div role="tabpanel" class="tab-pane fade" id="addNewItem">
-<<<<<<< HEAD
-                <form method="POST" class="form" role="form" enctype="multipart/form-data">
-=======
                 <form method="POST" class="form" role="form" enctype="multipart/form-data" action='<?php $_SERVER['REQUEST_URI'] ?>'>
->>>>>>> origin/master
                     <br> 
                     <div class="form-group ">
                         <div class="fileinput fileinput-new" data-provides="fileinput" data-name="fileToUpload">
@@ -461,22 +397,14 @@ if (isset($_POST['submit'])) {
 
                     <div class="form-group">
                         <div class="controls form-inline">
-<<<<<<< HEAD
-                            <span class="black">Free For Lending: </span> 
-=======
                             <span class="black">Fee For Lending: </span> 
->>>>>>> origin/master
                             <select class="form-control" id="bid_point_status" name="bid_point_status">
                                 <option value="no">No</option>
                                 <option value="yes">Yes</option>
                             </select>
                         </div>
                     </div>
-<<<<<<< HEAD
-                    
-=======
 
->>>>>>> origin/master
                     <div class="form-group">
                         <div class='input-group date hidden' id="bidDate">
                             <input class="form-control" id="bid_end_date" name="bid_end_date" placeholder="Bid End Date" required type="text">
@@ -501,11 +429,7 @@ if (isset($_POST['submit'])) {
                                     <span class="black">Minute : </span> 
                                     <select class="form-control" id="minutes" name="minutes">
                                         <?php
-<<<<<<< HEAD
-                                        for ($i = 0; $i < 61; $i++) {
-=======
                                         for ($i = 0; $i < 60; $i++) {
->>>>>>> origin/master
                                             echo "<option value='" . str_pad($i, 2, '0', STR_PAD_LEFT) . "'>" . str_pad($i, 2, '0', STR_PAD_LEFT) . "</option>";
                                         }
                                         ?>
@@ -513,11 +437,7 @@ if (isset($_POST['submit'])) {
                                     <span class="black">Second : </span> 
                                     <select class="form-control" id="seconds" name="seconds">
                                         <?php
-<<<<<<< HEAD
-                                        for ($i = 0; $i < 61; $i++) {
-=======
                                         for ($i = 0; $i < 60; $i++) {
->>>>>>> origin/master
                                             echo "<option value='" . str_pad($i, 2, '0', STR_PAD_LEFT) . "'>" . str_pad($i, 2, '0', STR_PAD_LEFT) . "</option>";
                                         }
                                         ?>
@@ -528,13 +448,10 @@ if (isset($_POST['submit'])) {
                     </div>
 
                     <div class="form-group ">
-<<<<<<< HEAD
-=======
                         <input class="form-control hidden" id="min_bid_point" name="min_bid_point" placeholder="Mininmum Bid Point" required type="integer" value="50">
                     </div>
 
                     <div class="form-group ">
->>>>>>> origin/master
                         <input class="form-control" id="pickup_location" name="pickup_location" placeholder="Pickup Location" required type="text">
                     </div>
 
@@ -550,18 +467,10 @@ if (isset($_POST['submit'])) {
                         <input class="form-control" id="borrow_end_date" name="borrow_end_date" placeholder="Borrow End Date" required type="text">
                     </div>
 
-<<<<<<< HEAD
-                    <button class="btn btn-success btn-lg btn-block" id="submit" name="submit" type="buttom">Submit</button>
-                </form>
-
-
-            </div>                <?php
-=======
                     <input class="btn btn-success btn-lg btn-block" type="submit" name="submit" value="Submit"/>
                 </form>
             </div>                
             <?php
->>>>>>> origin/master
         }
         ?>
     </div>

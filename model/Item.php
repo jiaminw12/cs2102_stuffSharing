@@ -28,12 +28,7 @@ class Item {
     }
 
     public function __construct($item_id, $owner, $item_title, $description, $category, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image) {
-<<<<<<< HEAD
-        echo $item_image;
-        $thid->item_id = $item_id;
-=======
         $this->item_id = $item_id;
->>>>>>> origin/master
         $this->owner = $owner;
         $this->item_title = $item_title;
         $this->description = $description;
@@ -60,13 +55,6 @@ class Item {
         return $this->owner;
     }
 
-<<<<<<< HEAD
-    public function getTitle() {
-        return $this->title;
-    }
-
-=======
->>>>>>> origin/master
     public function getDescription() {
         return $this->description;
     }
@@ -117,13 +105,8 @@ class Item {
         return $this->save();
     }
 
-<<<<<<< HEAD
-    public function setTitle($title) {
-        $this->title = $title;
-=======
     public function setItemTitle($item_title) {
         $this->item_title = $item_title;
->>>>>>> origin/master
         return $this->save();
     }
 
