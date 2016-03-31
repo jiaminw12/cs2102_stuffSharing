@@ -3,6 +3,9 @@ include 'libaries.php';
 include 'sqlconn.php';
 ?>
 
+<?php ob_start(); ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +19,7 @@ include 'sqlconn.php';
     <script src="js/search.js" ></script>
 
 </head>
+
 <body>
 
 <?php
@@ -203,3 +207,9 @@ include 'includes/navbar.php';
   </script>
 </body>
 </html>
+
+<?php
+$content = ob_get_clean();
+include_once 'template/skeleton.php';
+?>
+
