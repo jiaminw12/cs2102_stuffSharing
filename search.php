@@ -39,35 +39,18 @@ include 'includes/navbar.php';
         <div class="large-4 primary-background-translucent full-length columns">
             <div class="large-12 text-center columns">
             <br>
+			
             <?php
-            if(isset($_POST['search'])) {
-                    if(isset($_POST['departureSearch']) && isset($_POST['destinationSearch']) && isset($_POST['dateSearch'])) {
-                        $departure = strtoupper($_POST['departureSearch']);
-                        $destination = strtoupper($_POST['destinationSearch']);
-                        $date = $_POST['dateSearch'];
-
-                        $query = "SELECT COUNT(*) AS AVAIL_CARPOOL, MIN(TRIP_TIME) AS MIN_TRIP_TIME, MAX(TRIP_TIME) AS MAX_TRIP_TIME, MIN(COST) AS MIN_COST, MAX(COST) AS MAX_COST
-                                  FROM SEARCHQUERY
-                                  WHERE DEPARTURE = '".$departure."'
-                                  AND DESTINATION = '".$destination."'
-                                  AND TRIP_DATE = '".$date."'";
-
-                        $result = oci_parse($connect, $query);
-
-                        $check = oci_execute($result, OCI_DEFAULT);
-                        if($check == false) {
-                            redirectToSearchPage();
-                            exit;
-                        }
-
-                        $row = oci_fetch_array($result);
+            	if(isset($_POST['search'])) {
+                    if(isset($_POST['itemSearch'])) {
+                        $itemKeyword = strtoupper($_POST['itemSearch']);
 
                         //Retrieve available number of carpool
-                        echo'<p id="availCarpool">'.$row['AVAIL_CARPOOL'].'</p>';
+                        //echo'<p id="availCarpool">'.$row['AVAIL_CARPOOL'].'</p>';
                     }
                 }
             ?>
-                <p>Available Carpool(s)</p>
+                <p>Available Item(s)</p>
             </div>
             <hr>
             <div class="large-12 right columns">
@@ -75,16 +58,18 @@ include 'includes/navbar.php';
             </div>
             <div class="large-12 columns">
                 <ul class="button-group radius even-3">
-                    <li><a href="#" class="tiny button" id="seatSort">Seats</a></li>
-                    <li><a href="#" class="tiny button" id="timeSort">TIME</a></li>
-                    <li><a href="#" class="tiny button" id="priceSort">PRICE</a></li>
+                    <li><a href="#" class="tiny button" id="seatSort">NAME</a></li>
+                    <li><a href="#" class="tiny button" id="timeSort">CATEGORY</a></li>
+                    <li><a href="#" class="tiny button" id="priceSort">BID POINTS</a></li>
                 </ul>
             </div>
             <div class="large-12 right columns">
                 <p>FIlTER BY:</p>
             </div>
+			
+			
+			<!--	
             <div class="large-12 right columns">
-                <!--Set Time Range too!-->
                 <label>Time <?php echo '('.$row['MIN_TRIP_TIME'].' - '.$row['MAX_TRIP_TIME'].')' ?>
                     <div class="range-slider radius" data-slider>
                         <span class="range-slider-handle" role="slider" tabindex="0"></span>
@@ -94,27 +79,9 @@ include 'includes/navbar.php';
                 </label>
             </div>
 
-            <!--
-            <div class="large-12 right columns">
-                <label>Distance - Departure (2.3km - 40km)
-                    <div class="range-slider radius" data-slider>
-                        <span class="range-slider-handle" role="slider" tabindex="0"></span>
-                        <span class="range-slider-active-segment"></span>
-                        <input type="hidden">
-                    </div>
-                </label>
-                <label>Distance - Destination (2.3km - 40km)
-                    <div class="range-slider radius" data-slider>
-                        <span class="range-slider-handle" role="slider" tabindex="0"></span>
-                        <span class="range-slider-active-segment"></span>
-                        <input type="hidden">
-                    </div>
-                </label>
-            </div>
-            -->
+
 
             <div class="large-12 right columns">
-                <!--Set Price Range too!-->
                 <label>Price <?php echo '( SGD '.$row['MIN_COST'].' -  SGD '.$row['MAX_COST'].')' ?>
                     <div class="range-slider radius" data-slider>
                         <span id="priceFilter" class="range-slider-handle" role="slider" tabindex="0"></span>
@@ -124,23 +91,21 @@ include 'includes/navbar.php';
                 </label>
             </div>
         </div>
-
+		
+		-->
+		
+		
         <div class="large-8 white-translucent full-length columns">
             <form id="searchBox" method="post" action="search.php">
                 <br>
                 <div class="row">
-                    <div class="large-4 columns">
-                        <input type="text" name="departureSearch" placeholder="Departure" />
-                    </div>
-                    <div class="large-4 columns">
-                        <input type="text" name="destinationSearch" placeholder="Destination" />
-                    </div>
                     <div class="large-2 columns">
-                        <input type="text" name="dateSearch" placeholder="Date" class="datepicker"/>
+                        <input type="text" name="itemSearch" placeholder="KEYWORD" class="itempicker"/>
                     </div>
                     <div class="large-2 columns">
                         <input type="submit" id="search" name="search" class="tiny button" value="SEARCH" />
                     </div>
+					
                 </div>
             </form>
             <hr>
@@ -148,26 +113,18 @@ include 'includes/navbar.php';
             <div class="user large-12 right columns">
                 <?php
                 if(isset($_POST['search'])) {
-                    if(isset($_POST['departureSearch']) && isset($_POST['destinationSearch']) && isset($_POST['dateSearch'])) {
-                        $departure = strtoupper($_POST['departureSearch']);
-                        $destination = strtoupper($_POST['destinationSearch']);
-                        $date = $_POST['dateSearch'];
+                    if(isset($_POST['itemSearch'])) {
+                        $itemKeyword = strtoupper($_POST['itemSearch']);
 
-                        $query = "SELECT TRIPNO, DRIVER, DEPARTURE, DESTINATION, COST, SEATS_AVAILABLE, TRIP_DATE, TRIP_TIME
-                                  FROM SEARCHQUERY
-                                  WHERE DEPARTURE = '".$departure."'
-                                  AND DESTINATION = '".$destination."'
-                                  AND TRIP_DATE = '".$date."'";
-
-                        $result = oci_parse($connect, $query);
-
-                        $check = oci_execute($result, OCI_DEFAULT);
-                        if($check == false) {
+                        $result = ItemController/itemSearch($itemKeyword);
+						
+                        if(count($result) == 0) {
                             redirectToSearchPage();
                             exit;
                         }
 
                         // Print out results from Database
+/*
                         while($row = oci_fetch_array($result)) {
                             echo'<div class="row collapse" data-tripid="'.$row['TRIPNO'].'" data-cost="'.$row['COST'].'" data-start="'.$row['DEPARTURE'].'" data-end="'.$row['DESTINATION'].'" data-date="'.$row['TRIP_DATE'].'" data-time="'.$row['TRIP_TIME'].'" data-seats-avail="'.$row['SEATS_AVAILABLE'].'">
                                 <div class="large-4 columns">
@@ -191,7 +148,7 @@ include 'includes/navbar.php';
                                 <hr>
                             </div>
                             ';
-                        }
+                        }     */
                     }
                 }
                 ?>
