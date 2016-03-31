@@ -271,4 +271,12 @@ body > div > div > div > div.inner.cover.container button a {
 
 .black {
     color: #000;
+<<<<<<< HEAD
 }
+=======
+}
+
+.white {
+    color: #fff !important;
+}
+>>>>>>> origin/master

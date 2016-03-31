@@ -4,6 +4,10 @@
 
 /*******************************************************************************/
 --> Login check: 1 if email and password exist, else 0
+<<<<<<< HEAD
+=======
+/*******************************************************************************/
+>>>>>>> origin/master
 SELECT CAST(1 AS BIT) AS valid_login
 FROM users u
 WHERE u.email = 'zhanghong2011@msn.com' AND

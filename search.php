@@ -3,6 +3,12 @@ include 'libaries.php';
 include 'sqlconn.php';
 ?>
 
+<<<<<<< HEAD
+=======
+<?php ob_start(); ?>
+
+
+>>>>>>> origin/master
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +22,10 @@ include 'sqlconn.php';
     <script src="js/search.js" ></script>
 
 </head>
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 <body>
 
 <?php
@@ -203,3 +213,12 @@ include 'includes/navbar.php';
   </script>
 </body>
 </html>
+<<<<<<< HEAD
+=======
+
+<?php
+$content = ob_get_clean();
+include_once 'template/skeleton.php';
+?>
+
+>>>>>>> origin/master

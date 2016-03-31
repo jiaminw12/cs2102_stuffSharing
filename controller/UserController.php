@@ -44,19 +44,32 @@ namespace UserController {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
             return null;
         } else {
+<<<<<<< HEAD
             $statement = "INSERT INTO userinfo(username, email, name, password, contact_num, admin) VALUES('" . $username . "', '" . $email . "', '" . $name . "', '" . $password . "', '" . $contact_num ."', '" . $admin . "')";
 
             $r = \DBHandler::execute($statement, false);
             
+=======
+            $statement = "INSERT INTO userinfo(username, email, name, password, contact_num, admin) VALUES('" . $username . "', '" . $email . "', '" . $name . "', '" . $password . "', '" . $contact_num . "', '" . $admin . "')";
+
+            $r = \DBHandler::execute($statement, false);
+
+>>>>>>> origin/master
             // redirect if login was successful
             header('Location:' . 'index.php');
         }
     }
 
     function getUser($username) {
+<<<<<<< HEAD
         $statement = "SELECT * FROM userinfo WHERE username ='" .  $username ."'";
         $result = \DBHandler::execute($statement, true);
         
+=======
+        $statement = "SELECT * FROM userinfo WHERE username ='" . $username . "'";
+        $result = \DBHandler::execute($statement, true);
+
+>>>>>>> origin/master
         if (count($result) != 1) {
             return null;
         } else {
@@ -65,6 +78,21 @@ namespace UserController {
         }
     }
 
+<<<<<<< HEAD
+=======
+    function getUsername($email) {
+        $statement = "SELECT username FROM userinfo WHERE email ='" . $email . "'";
+        $result = \DBHandler::execute($statement, true);
+
+        if (count($result) != 1) {
+            return null;
+        } else {
+            $result = $result[0];
+            return $result[0];
+        }
+    }
+
+>>>>>>> origin/master
     function getActiveUser() {
         $activeUser = isset($_SESSION['username']) ? $_SESSION['username'] : null;
         if ($activeUser) {
@@ -73,6 +101,7 @@ namespace UserController {
         return $activeUser;
     }
 
+<<<<<<< HEAD
     function isCreator($username) {
         if (isset($username)) {
             $statement = "SELECT admin FROM userinfo WHERE username = '$username'";
@@ -86,6 +115,16 @@ namespace UserController {
             }
         } else {
             return false;
+=======
+    function isCreator($owner, $item_id) {
+        $statement = "SELECT * FROM items WHERE owner = '$owner' AND item_id = '$item_id'";
+        $result = \DBHandler::execute($statement, true);
+
+        if (count($result) != 1) {
+            return false;
+        } else {
+            return true;
+>>>>>>> origin/master
         }
     }
 
