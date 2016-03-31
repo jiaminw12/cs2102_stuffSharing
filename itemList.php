@@ -66,21 +66,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $item_id = getToken(20);
+    $item_id = getToken(30);
     $item_title = $_POST["item_title"];
     $description = $_POST["description"];
     $category = $_POST["category"];
-    $min_bid = $_POST["min_bid"];
-
-    if ($min_bid < 0 || is_float($min_bid)) {
-        $errors[] = "Enter numerical amount";
+    $bid_point_status = $_POST["bid_point_status"];
+    
+    if ($bid_point_status == "yes"){
+        $bid_point_status = 1;
+        $bid_end_date = $_POST["bid_end_date"];
+        $time = $_POST["hours"] . ":" . $_POST["minutes"] . ":" . $_POST["seconds"];
+    } else {
+        $bid_point_status = 0;
+        $bid_end_date = "0000-00-00";
+        $time = "00::00::00";
     }
-
+    
     $pickup_location = $_POST["pickup_location"];
     $return_location = $_POST["return_location"];
     $borrow_start_date = $_POST["borrow_start_date"];
     $borrow_end_date = $_POST["borrow_end_date"];
-    $bid_end_date = $_POST["bid_end_date"];
 
     if ($borrow_start_date < $bid_end_date || $borrow_end_date < $bid_end_date) {
         $errors[] = "Borrow end date must be after borrow start date.";
@@ -89,8 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($borrow_end_date - $borrow_start_date < 0) {
         $errors[] = "Borrow end date must be after borrow start date.";
     }
-
-    $time = $_POST["hours"] . ":" . $_POST["minutes"] . ":" . $_POST["seconds"];
 
     if (empty($errors) == true) {
         if (is_null($file_name)) {
@@ -105,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $bid_end_date = $bid_end_date . " " . $time;
         $item_image = $file_name;
-        $items = ItemController\createNewItem($item_id, $item_title, $description, $category, $min_bid, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image);
+        $items = ItemController\createNewItem($item_id, $item_title, $description, $category, $bid_point_status, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image);
         move_uploaded_file($file_tmp, "uploadFiles/" . $file_name);
         $message = "New item added";
         $message_type = "success";
@@ -127,8 +130,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $("#bid_point_status").change(function() {
             $(this).find("option:selected").each(function() {
                 if ($(this).attr("value") == "yes") {
+                    $("#bidDate").removeClass('hidden');
                     $("#bid_timming").removeClass('hidden');
                 } else {
+                    $("#bidDate").addClass('hidden');
                     $("#bid_timming").addClass('hidden');
                 }
             });
@@ -236,6 +241,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <div class='input-group date hidden' id="bidDate">
+                            <input class="form-control" id="bid_end_date" name="bid_end_date" placeholder="Bid End Date" required type="text">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <div class="form-group">
@@ -268,15 +282,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </div>
                         </div> 
-                    </div>
-
-                    <div class="form-group ">
-                        <div class='input-group date' id='min_bid' >
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-usd"></span>
-                            </span>
-                            <input type='text' class="form-control" name="min_bid" value="0" />
-                        </div>
                     </div>
 
                     <div class="form-group ">

@@ -2,7 +2,7 @@
 
 include_once __DIR__ . '/../db/DBHandler.php';
 include_once __DIR__ . '/Bid.php';
-include_once __DIR__ . '/../helper/DateHelper.php';
+include_once __DIR__ . '/User.php';
 
 date_default_timezone_set("Asia/Singapore");
 
@@ -13,7 +13,8 @@ class Item {
     private $title;
     private $description;
     private $category;
-    private $min_bid;
+    private $bid_point_status;
+    private $available;
     private $pickup_location;
     private $return_location;
     private $borrow_start_date;
@@ -22,17 +23,19 @@ class Item {
     private $item_image;
 
     private function save() {
-        $statement = "UPDATE items SET owner='{$this->owner}', item_title='{$this->item_title}', description='{$this->description}', category='{$this->category}', min_bid='{$this->min_bid}', pickup_location='{$this->pickup_location}', return_location='{$this->return_location}', borrow_start_date='{$this->borrow_start_date}', borrow_end_date='{$this->$borrow_end_date}', bid_end_date='{$this->bid_end_date}', item_image='{$this->item_image}' WHERE item_id='{$this->item_id}'";
+        $statement = "UPDATE items SET owner='{$this->owner}', item_title='{$this->item_title}', description='{$this->description}', category='{$this->category}', bid_point_status='{$this->bid_point_status}', ', available='{$this->available}', pickup_location='{$this->pickup_location}', return_location='{$this->return_location}', borrow_start_date='{$this->borrow_start_date}', borrow_end_date='{$this->borrow_end_date}', bid_end_date='{$this->bid_end_date}', item_image='{$this->item_image}' WHERE item_id='{$this->item_id}'";
         return DBHandler::execute($statement, false);
     }
 
-    public function __construct($item_id, $owner, $item_title, $description, $category, $min_bid, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image) {
+    public function __construct($item_id, $owner, $item_title, $description, $category, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image) {
+        echo $item_image;
         $thid->item_id = $item_id;
         $this->owner = $owner;
         $this->item_title = $item_title;
         $this->description = $description;
         $this->category = $category;
-        $this->min_bid = $min_bid;
+        $this->bid_point_status = $bid_point_status;
+        $this->avaiable = $available;
         $this->pickup_location = $pickup_location;
         $this->return_location = $return_location;
         $this->borrow_start_date = $borrow_start_date;
@@ -65,8 +68,12 @@ class Item {
         return $this->category;
     }
 
-    public function getMinBid() {
-        return $this->min_bid;
+    public function getBidPointStatus() {
+        return $this->bid_point_status;
+    }
+    
+     public function getAvailable() {
+        return $this->avaiable;
     }
 
     public function getPickupLocation() {
@@ -97,6 +104,11 @@ class Item {
         $this->item_id = $item_id;
         return $this->save();
     }
+    
+    public function setOwner($owner) {
+        $this->owner = $owner;
+        return $this->save();
+    }
 
     public function setTitle($title) {
         $this->title = $title;
@@ -113,8 +125,13 @@ class Item {
         return $this->save();
     }
     
-    public function setMinBid($min_bid) {
-        $this->min_bid = $min_bid;
+    public function setBidPointStatus($bid_point_status) {
+        $this->bid_point_status = $bid_point_status;
+        return $this->save();
+    }
+    
+    public function setAvailable($available) {
+        $this->available = $available;
         return $this->save();
     }
 
@@ -144,6 +161,7 @@ class Item {
     }
 
     public function setItemImage($item_image) {
+        echo $item_image;
         $this->item_image = $item_image;
         return $this->save();
     }

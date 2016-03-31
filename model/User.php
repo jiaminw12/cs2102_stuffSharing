@@ -2,7 +2,6 @@
 
 include_once __DIR__ . '/Bid.php';
 include_once __DIR__ . '/../db/DBHandler.php';
-include_once __DIR__ . '/../helper/DateHelper.php';
 include_once __DIR__ . '/Item.php';
 
 date_default_timezone_set("Asia/Singapore");
