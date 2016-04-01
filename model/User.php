@@ -11,21 +11,23 @@ class User {
     private $name;
     private $admin;
     private $email;
+    private $bid_point;
     private $password;
     private $contact_num;
 
     private function save() {
-        $statement = "UPDATE userinfo SET name='{$this->name}', email='{$this->email}', password='{$this->password}, contact_num='{$this->contact_num}',admin='{$this->admin}'' WHERE username='{$this->username}'";
+        $statement = "UPDATE userinfo SET name='{$this->name}',bit_point='{$this->bid_point}', email='{$this->email}', password='{$this->password}, contact_num='{$this->contact_num}',admin='{$this->admin}'' WHERE username='{$this->username}'";
         return DBHandler::execute($statement, false);
     }
 
-    public function __construct($username, $email, $name, $password, $contact_num, $admin) {
+    public function __construct($username, $email, $name, $password, $contact_num, $admin,$bid_point) {
         $this->username = $username;
         $this->email = $email;
         $this->name = $name;
         $this->password = $password;
         $this->contact_num = $contact_num;
         $this->admin = $admin;
+        $this->bid_point = $bid_point;
     }
 
     public function getUsername() {
@@ -35,9 +37,16 @@ class User {
     public function getName() {
         return $this->name;
     }
+    public function getBidPoint() {
+        return $this->bid_point;
+    }
 
     public function setName($name) {
         $this->name = $name;
+        return $this->save();
+    }
+    public function setBidPoint($name) {
+        $this->name = $bid_point;
         return $this->save();
     }
 

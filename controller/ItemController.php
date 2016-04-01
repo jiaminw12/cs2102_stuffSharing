@@ -61,6 +61,17 @@ namespace ItemController {
         }
         return $items;
     }
+    function getAvailableItem($owner) {
+        $statement = "SELECT * FROM items WHERE owner = '" . $owner . "' ORDER BY item_id DESC";
+
+        $result = \DBHandler::execute($statement, true);
+
+        $projects = array();
+        foreach ($result as $res) {
+            $items[] = new \Item($res[0], $res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10], $res[11], $res[12]);
+        }
+        return $items;
+    }
 
     function getUserEmail($username) {
         $statement = "SELECT * FROM userinfo WHERE username ='" . $username . "'";

@@ -37,6 +37,22 @@ namespace BidController {
 
         return $bidList;
     }
+    function getSelectedBids($item_id) {
+    //    $executingUser = isset($_SESSION['username']) ? \UserController\getUser($_SESSION['username']) : null;
+     //   if ($executingUser == null || $executingUser->getAdmin() != 0) {
+      //      return null;
+       // }
+
+        $statement = "SELECT * FROM bids WHERE  item_id='" . $item_id . "'";
+        $result = \DBHandler::execute($statement, true);
+
+        $bidList2 = array();
+        foreach ($result as $res) {
+            $bidList2[] = new \Bid($res[0], $res[1], $res[2], $res[3], $res[4]);
+        }
+
+        return $bidList2;
+    }
 
     function removeBid($item_id, $borrower) {
         if (\UserController\canActiveUserModifyBid($item_id)) {

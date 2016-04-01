@@ -10,7 +10,7 @@ class Item {
 
     private $item_id;
     private $owner;
-    private $title;
+    private $item_title;
     private $description;
     private $category;
     private $bid_point_status;
@@ -180,9 +180,10 @@ class Item {
     }
 
     public function getBidPoint() {
-        $statement = "SELECT MAX(bid_point) FROM bid WHERE WHERE item_id= {$this->item_id}";
+        $statement = "SELECT MAX(bid_point) FROM bid WHERE item_id= {$this->item_id}";
 
         $result = DBHandler::execute($statement, true);
+        
 
         if (isset($result[0])) {
             return $result[0];
