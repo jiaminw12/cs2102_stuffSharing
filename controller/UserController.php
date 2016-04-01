@@ -12,6 +12,7 @@ namespace UserController {
         $user = getUser($username);
         if (isset($user) && $user->verifyPassword($password)) {
             $_SESSION["username"] = $user->getUsername();
+            echo $_SESSION["username"];
             return true;
         } else {
             return false;
@@ -98,10 +99,10 @@ namespace UserController {
 
     function isAdmin($username) {
         if (isset($username)) {
-            $statement = "SELECT * FROM userinfo WHERE username = '{$username}'";
+            $statement = "SELECT * FROM userinfo WHERE username = '{$username}' AND admin = 1";
             $result = \DBHandler::execute($statement, true);
 
-            return count($result) == 1 && $result[0][6] == 1;
+            return count($result) == 1 && $result[0][5] == 1;
         } else {
             return false;
         }

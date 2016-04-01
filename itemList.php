@@ -205,7 +205,7 @@ if (isset($_POST['submit'])) {
                     <li role="presentation"><a href="#others" aria-controls="others" role="tab" data-toggle="tab">Others</a></li>
 
                     <?php
-                    if (UserController\isSignedIn() && UserController\isCreator($_SESSION["username"])) {
+                    if (UserController\isSignedIn()) {
                         ?>
                         <li role="presentation" style="float:right;"><a href="#addNewItem" aria-controls="addNewItem" role="tab" data-toggle="tab">Create Item</a></li>
                         <?php
@@ -363,7 +363,7 @@ if (isset($_POST['submit'])) {
         </div>
 
         <?php
-        if (UserController\isSignedIn() && UserController\isCreator($_SESSION["username"])) {
+        if (UserController\isSignedIn()) {
             ?>
             <div role="tabpanel" class="tab-pane fade" id="addNewItem">
                 <form method="POST" class="form" role="form" enctype="multipart/form-data" action='<?php $_SERVER['REQUEST_URI'] ?>'>

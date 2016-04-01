@@ -5,6 +5,7 @@ include_once "controller/UserController.php";
 include_once "controller/ItemController.php";
 
 $page = $current_page;
+$username = $_SESSION["username"];
 
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
@@ -15,13 +16,11 @@ parse_str($parts['query'], $query);
 
 if (!empty($_POST['submit_bid'])) {
     // 
-  
 }
 
 if (!empty($_POST['submit_borrow'])) {
-  
+    
 }
-
 ?>
 
 <?php ob_start(); ?>
@@ -35,13 +34,11 @@ if (!empty($_POST['submit_borrow'])) {
         ?>
         <div class="row">
             <div class="col-lg-12">
-               
+
                 <h1 class="page-header"><?php echo $item->getItemTitle(); ?> by <?php echo UserController\getUsername($item->getOwner()) ?></h1>
             </div>
         </div>
-        <!-- /.row -->
 
-        <!-- Portfolio Item Row -->
         <div class="row">
 
             <div class="col-md-4">
@@ -49,38 +46,33 @@ if (!empty($_POST['submit_borrow'])) {
             </div>
 
             <div class="col-md-8">
-                <h3>Project Description</h3>
-                <p><?php echo $item->getDescription(); ?></p>
-                <p><?php echo $item->getPickupLocation(); ?></p>
-                <p><?php echo $item->getReturnLocation(); ?></p>
-                <p><?php echo $item->getBorrowStartDate(); ?> - <?php echo $item->getBorrowEndDate(); ?></p>
-                
-                <?php echo $_SESSION["username"]; ?>
-                
+                <h3><?php echo $item->getDescription(); ?></h3>
+                <p><?php echo $item->getPickupLocation(); ?> <span class="glyphicon glyphicon-arrow-right"></span> <?php echo $item->getReturnLocation(); ?></p>
+                <p>Loan date: <?php echo $item->getBorrowStartDate(); ?> <span class="glyphicon glyphicon-arrow-right"></span> <?php echo $item->getBorrowEndDate(); ?></p>
                 <?php
-    if (UserController\isSignedIn()) {
-        ?>
-              <span class="black"> hhhhhhhhhhhhhhhhhh </span>
-        <form method="POST" class="form" role="form" enctype="multipart/form-data">
-            <input class="form-control" id="bid_point" name="bid_point" placeholder="Bid Point" required type="integer" value="">
-            <button class="btn btn-success btn-lg btn-block" id="submit" name="submit_bid" type="button">Bid</button>
-        </form>
+                if (UserController\isSignedIn()) {
+                    if (strcmp(UserController\getUsername($item->getOwner()), $username) !== 0) {
+                        if ($item->getBidPointStatus() > 0) {
+                            ?>
+                            <form method="POST" class="form" role="form" enctype="multipart/form-data">
+                                <input class="form-control" id="bid_point" name="bid_point" placeholder="Bid Point" required type="integer" value="">
+                                <button class="btn btn-success btn-lg btn-block" id="submit" name="submit_bid" type="button">Bid</button>
+                            </form>
+                        <?php } else { ?>
+                            <form method="POST" class="form" role="form" enctype="multipart/form-data">
+                                <button class="btn btn-success btn-lg btn-block" id="submit" name="submit_borrow" type="button">Borrow</button>
+                            </form>
+                        <?php } ?>
+                    <?php } ?>
+                <?php } ?>
 
-    <?php } else { ?>
-                <span class="black"> kkkkkkkkkkkkkk </span>
-        <form method="POST" class="form" role="form" enctype="multipart/form-data">
-            <button class="btn btn-success btn-lg btn-block" id="submit" name="submit_borrow" type="button">Borrow</button>
-        </form>
-    <?php } ?>
-                
             </div>
         </div>
     </div>
-    <!-- /.row -->
 
 <?php } ?>
 
-        
+
 <?php
 $content = ob_get_clean();
 include_once 'template/skeleton.php';
