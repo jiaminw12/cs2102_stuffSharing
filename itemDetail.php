@@ -15,8 +15,14 @@ if (isset($_GET['page'])) {
 $item_id = htmlspecialchars($_GET["id"]);
 $itemList = ItemController\getItem($item_id);
 
+
+$highestPoint[1] = BidController\getTheHighestBidPoint($item_id);
+
 if (!empty($_POST['submit_bid'])) {
-    // 
+    // get the amout
+    // do math
+    // then update to usercontroller
+    // insert into bids
 }
 
 if (!empty($_POST['submit_borrow'])) {
@@ -58,6 +64,7 @@ if (!empty($_POST['submit_borrow'])) {
                 <h3><?php echo $item->getDescription(); ?></h3>
                 <p><?php echo $item->getPickupLocation(); ?> <span class="glyphicon glyphicon-arrow-right"></span> <?php echo $item->getReturnLocation(); ?></p>
                 <p>Loan date: <?php echo $item->getBorrowStartDate(); ?> <span class="glyphicon glyphicon-arrow-right"></span> <?php echo $item->getBorrowEndDate(); ?></p>
+                <p><?php echo $highestPoint[1];?></p>
                 <p></p>
                 <?php
                 if (UserController\isSignedIn()) {
@@ -65,7 +72,15 @@ if (!empty($_POST['submit_borrow'])) {
                         if ($item->getBidPointStatus() > 0) {
                             ?>
                             <form method="POST" class="form" role="form" enctype="multipart/form-data">
-                                <input class="form-control" id="bid_point" name="bid_point" placeholder="Bid Point" required type="integer" value="">
+                                <?php 
+                                if (BidController\getSelectedBidBoolean($item_id)){
+                                    $value = $item->getBidPointStatus();
+                                } else {
+                                    $result = BidController\getSelectedBidByUserAndItemID(UserController\getEmail($username), $item_id);
+                                    $value = $result;
+                                }
+                                ?>
+                                <input class="form-control" id="bid_point" name="bid_point" placeholder="Bid Point" required type="integer" value="<?php echo $value;?>">
                                 <button class="btn btn-success btn-lg btn-block" id="submit" name="submit_bid" type="button">Bid</button>
                             </form>
                         <?php } else { ?>

@@ -76,6 +76,18 @@ namespace UserController {
             return $result[0];
         }
     }
+    
+    function getEmail($username) {
+        $statement = "SELECT email FROM userinfo WHERE username ='" . $username . "'";
+        $result = \DBHandler::execute($statement, true);
+
+        if (count($result) != 1) {
+            return null;
+        } else {
+            $result = $result[0];
+            return $result[0];
+        }
+    }
 
     function getActiveUser() {
         $activeUser = isset($_SESSION['username']) ? $_SESSION['username'] : null;
