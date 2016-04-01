@@ -124,13 +124,13 @@ include 'includes/navbar.php';
                         }
 
                         // Print out results from Database
-/*
-                        while($row = oci_fetch_array($result)) {
-                            echo'<div class="row collapse" data-tripid="'.$row['TRIPNO'].'" data-cost="'.$row['COST'].'" data-start="'.$row['DEPARTURE'].'" data-end="'.$row['DESTINATION'].'" data-date="'.$row['TRIP_DATE'].'" data-time="'.$row['TRIP_TIME'].'" data-seats-avail="'.$row['SEATS_AVAILABLE'].'">
+
+                        foreach($result) {
+                            echo'<div class="row collapse" data-itemName="'.$result[0].'" data-description="'.$result[1].'">
                                 <div class="large-4 columns">
                                     <br>
                                     <br>
-                                    <p><b>'.$row['DRIVER'].'</b></p>
+                                    <p><b>'dummy'</b></p>
                                 </div>
                                 <div class="large-4 columns">
                                     <!--<p>4 July 2015, 6:00 pm</p>-->
@@ -148,7 +148,7 @@ include 'includes/navbar.php';
                                 <hr>
                             </div>
                             ';
-                        }     */
+                        }  
                     }
                 }
                 ?>
