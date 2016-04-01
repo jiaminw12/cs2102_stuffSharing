@@ -11,7 +11,7 @@ class Bid {
     private $created_date;
 
     private function save() {
-        $statement = "UPDATE bid SET status={$this->status} ' WHERE item_id={$this->item_id} ' AND ' borrower='{$this->borrower} ' AND ' owner='{$this->owner}";
+        $statement = "UPDATE borrows SET status={$this->status} ' WHERE item_id={$this->item_id} ' AND ' borrower='{$this->borrower} ' AND ' owner='{$this->owner}";
         return DBHandler::execute($statement, false);
     }
 

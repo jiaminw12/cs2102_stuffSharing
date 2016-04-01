@@ -6,18 +6,15 @@ namespace BorrowController {
     include_once __DIR__ . '/../db/DBHandler.php';
     include_once __DIR__ . '/UserController.php';
 
-    function createNewBorrow($item_id, $status) {
+    function createNewBorrow($owner, $borrower, $item_id, $status) {
         date_default_timezone_set("Asia/Singapore");
-
-        $owner = $item_id->getOwner();
-        $borrower = $_SESSION['username'];
-        $statement = "INSERT INTO borrows (owner, borrower, item_id, bid_point) VALUES ({$owner}, '{$borrower}', {$item_id}', {$status}')";
+        $statement = "INSERT INTO borrows(owner, borrower, item_id, status) VALUES ('{$owner}, '{$borrower}', {$item_id}', {$status}')";
         $result = \DBHandler::execute($statement, false);
 
         if (!$result) {
             return null;
         } else {
-            return new \Borrow($owner, $borrower, $item_id, $status, $created_date);
+            return new \Borrow($owner, $borrower, $item_id, $status);
         }
     }
 
@@ -38,14 +35,42 @@ namespace BorrowController {
         return $borrowList;
     }
 
-    function removeBorrow($item_id, $borrower) {
+    function getAllBorrowsByUser() {
+        $executingUser = isset($_SESSION['username']) ? \UserController\getUser($_SESSION['username']) : null;
+        if ($executingUser == null) {
+            return null;
+        }
+
+        $statement = "SELECT * FROM borrows WHERE borrower='" . $_SESSION['username'] . "'";
+        $result = \DBHandler::execute($statement, true);
+
+        $borrowList = array();
+        foreach ($result as $res) {
+            $borrowList[] = new \Borrow($res[0], $res[1], $res[2], $res[3], $res[4]);
+        }
+
+        return $borrowList;
+    }
+
+    function updateStatus($owner, $borrower, $item_id, $status) {
+        $statement = "UPDATE borrows SET status='{$status}'WHERE owner='" . $owner . "'AND item_id='" . $item_id . "' AND borrower='" . $borrower . "'";
+        return DBHandler::execute($statement, false);
+    }
+
+    function removeBorrow($owner, $borrower, $item_id) {
         if (\UserController\canActiveUserModifyBorrow($item_id)) {
-            $statement = "DELETE FROM borrows WHERE item_id = '{$item_id}' AND borrower = '{$borrower}'";
+            $statement = "DELETE FROM borrows 'WHERE owner='" . $owner . "'AND item_id='" . $item_id . "' AND borrower='" . $borrower . "'";
             $result = \DBHandler::execute($statement, false);
             return $result;
         } else {
             return null;
         }
+    }
+
+    function removeAllBorrows() {
+        $statement = "DELETE FROM borrows";
+        $result = \DBHandler::execute($statement, false);
+        return $result;
     }
 
 }

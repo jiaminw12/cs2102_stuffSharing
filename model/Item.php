@@ -23,7 +23,7 @@ class Item {
     private $item_image;
 
     private function save() {
-        $statement = "UPDATE items SET owner='{$this->owner}', item_title='{$this->item_title}', description='{$this->description}', category='{$this->category}', bid_point_status='{$this->bid_point_status}', ', available='{$this->available}', pickup_location='{$this->pickup_location}', return_location='{$this->return_location}', borrow_start_date='{$this->borrow_start_date}', borrow_end_date='{$this->borrow_end_date}', bid_end_date='{$this->bid_end_date}', item_image='{$this->item_image}' WHERE item_id='{$this->item_id}'";
+        $statement = "UPDATE items SET owner='{$this->owner}', item_title='{$this->item_title}', description='{$this->description}', category='{$this->category}', bid_point_status='{$this->bid_point_status}', available='{$this->available}', pickup_location='{$this->pickup_location}', return_location='{$this->return_location}', borrow_start_date='{$this->borrow_start_date}', borrow_end_date='{$this->borrow_end_date}', bid_end_date='{$this->bid_end_date}', item_image='{$this->item_image}' WHERE item_id='{$this->item_id}'";
         return DBHandler::execute($statement, false);
     }
 

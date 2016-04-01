@@ -16,7 +16,7 @@ class User {
     private $contact_num;
 
     private function save() {
-        $statement = "UPDATE userinfo SET name='{$this->name}',bit_point='{$this->bid_point}', email='{$this->email}', password='{$this->password}, contact_num='{$this->contact_num}',admin='{$this->admin}'' WHERE username='{$this->username}'";
+        $statement = "UPDATE userinfo SET name='{$this->name}',bid_point='{$this->bid_point}', email='{$this->email}', password='{$this->password}, contact_num='{$this->contact_num}',admin='{$this->admin}'' WHERE username='{$this->username}'";
         return DBHandler::execute($statement, false);
     }
 

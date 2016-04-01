@@ -93,10 +93,20 @@ namespace ItemController {
             return $activeUser->getItemList();
         }
     }
+    
+    function updateItemDetails($item_title, $description, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date) {
+        $statement = "UPDATE items SET item_title='". $item_title ."', description='". $description ."', bid_point_status='". $bid_point_status . "', available='" . $available . "', pickup_location='" . $pickup_location . "', return_location='". $return_location . "', borrow_start_date='". $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
+        return DBHandler::execute($statement, false);
+    }
+    
+    function updateAvailable($item_id, $available) {
+        $statement = "UPDATE items SET available='".$available."'WHERE item_id='".$item_id."'";
+        return DBHandler::execute($statement, false);
+    }
 
     function removeItem($item_id) {
         if (\UserController\canActiveUserModifyItem($item_id)) {
-            $statement = "DELETE FROM items WHERE item_id = {$item_id}";
+            $statement = "DELETE FROM items WHERE item_id = '" . $item_id ."'";
             $result = \DBHandler::execute($statement, false);
             return $result;
         } else {

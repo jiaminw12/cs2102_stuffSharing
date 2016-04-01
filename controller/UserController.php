@@ -4,9 +4,8 @@ namespace UserController {
 
     include_once __DIR__ . '/../db/DBHandler.php';
     include_once __DIR__ . '/../model/User.php';
-
-//include_once __DIR__ . '/BidController.php';
-//include_once __DIR__ . '/ItemController.php';
+    include_once __DIR__ . '/BidController.php';
+    include_once __DIR__ . '/ItemController.php';
 
     function signIn($username, $password) {
         $user = getUser($username);
@@ -99,7 +98,7 @@ namespace UserController {
 
     function isAdmin($username) {
         if (isset($username)) {
-            $statement = "SELECT * FROM userinfo WHERE username = '{$username}' AND admin = 1";
+            $statement = "SELECT * FROM userinfo WHERE username = '" . $username . "' AND admin = 1";
             $result = \DBHandler::execute($statement, true);
 
             return count($result) == 1 && $result[0][5] == 1;
@@ -119,10 +118,15 @@ namespace UserController {
 
         $userList = array();
         foreach ($result as $res) {
-            $userList[] = new \User($res[0], $res[1], $res[2], $res[3], $res[4], $res[5]);
+            $userList[] = new \User($res[0], $res[1], $res[2], $res[3], $res[4], $res[5], $res[6]);
         }
 
         return $userList;
+    }
+
+    function UpdateBidPoint($owner, $bid_point) {
+        $statement = "UPDATE userinfo SET bid_point='" . $bid_point . "'WHERE owner='" . $owner . "'";
+        return DBHandler::execute($statement, false);
     }
 
     function canActiveUserModifyUser($username) {
@@ -141,6 +145,11 @@ namespace UserController {
         $activeUser = getActiveUser();
         $bidToModify = \BidController\getBid($itemID);
         return $activeUser && $bidToModify && $activeUser->canModifyBid($bidToModify);
+    }
+
+    function recalculateBidPoint($username, $bid_point) {
+        $statement = "UPDATE userinfo SET bid_point='".$bid_point."'WHERE username='". $username. "'";
+        return DBHandler::execute($statement, false);
     }
 
     function removeUser($username) {

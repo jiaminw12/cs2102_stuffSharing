@@ -3,6 +3,7 @@ session_start();
 $current_page = 'ItemsDetail';
 include_once "controller/UserController.php";
 include_once "controller/ItemController.php";
+include_once 'controller/BorrowController.php';
 
 $page = $current_page;
 $username = $_SESSION["username"];
@@ -11,15 +12,23 @@ if (isset($_GET['page'])) {
     $page = $_GET['page'];
 }
 
-$parts = parse_url($url);
-parse_str($parts['query'], $query);
+$item_id = htmlspecialchars($_GET["id"]);
+$itemList = ItemController\getItem($item_id);
 
 if (!empty($_POST['submit_bid'])) {
     // 
 }
 
 if (!empty($_POST['submit_borrow'])) {
-    
+    $errors = array();
+    $owner = UserController\getUsername($item->getOwner());
+    $borrower = $username;
+    // 1 -> borrowed; 2 -> returned; 3 -> overdue
+    $status = 1;
+    $borrows = BorrowController\createNewBorrow($owner, $borrower, $item_id, $status);
+    ItemController\UpdateAvailable($item_id, 0);
+    $message = "New borrow transaction added";
+    $message_type = "success";
 }
 ?>
 
@@ -28,8 +37,8 @@ if (!empty($_POST['submit_borrow'])) {
 <br/>
 <!-- Page Content -->
 <div class="container">
+    <h1 class="black">borrow</h1>
     <?php
-    $itemList = ItemController\getItem(htmlspecialchars($_GET["id"]));
     foreach ($itemList as $item) {
         ?>
         <div class="row">
@@ -49,6 +58,7 @@ if (!empty($_POST['submit_borrow'])) {
                 <h3><?php echo $item->getDescription(); ?></h3>
                 <p><?php echo $item->getPickupLocation(); ?> <span class="glyphicon glyphicon-arrow-right"></span> <?php echo $item->getReturnLocation(); ?></p>
                 <p>Loan date: <?php echo $item->getBorrowStartDate(); ?> <span class="glyphicon glyphicon-arrow-right"></span> <?php echo $item->getBorrowEndDate(); ?></p>
+                <p></p>
                 <?php
                 if (UserController\isSignedIn()) {
                     if (strcmp(UserController\getUsername($item->getOwner()), $username) !== 0) {
