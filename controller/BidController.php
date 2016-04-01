@@ -128,22 +128,22 @@ namespace BidController {
 
         // insert into borrow table
         $statement2 = \BorrowController\createNewBorrow($owner, $borrower, $item_id, $status);
-        $result2 = \DBHandler::execute($statement, false);
+        \DBHandler::execute($statement2, false);
 
         // delete, return the points
         // update the points into successful sharing -> owner?
         $statement3 = "SELECT * FROM bids WHERE item_id='" . $item_id . "'";
         $result3 = \DBHandler::execute($statement3, true);
-
-        $bidList = array();
-        foreach ($result as $res) {
+        foreach ($result3 as $res) {
             if ($res[3] < $highest_bid_point) {
                 $statement4 = \UserController\recalculateBidPoint($res[0], $res[3]);
                 $result4 = \DBHandler::execute($statement4, false);
                 $statement = "DELETE FROM bids WHERE item_id='" . $item_id . "' AND bidder='" . $res[1] . "'";
-                $result = \DBHandler::execute($statement, false);
+                \DBHandler::execute($statement, false);
             }
         }
+        
+        \ItemController\updateAvailable($item_id, 0);        
     }
 
 }
