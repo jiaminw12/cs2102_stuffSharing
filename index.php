@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1 class="cover-heading">Welcome to ShareIt</h1>
     <p class="lead">Stuff Sharing site</p>
     <p></p>
-    <p>testing 2</p>
     <form method="post" role="form">
         <div class="form-group">
             <div id="imaginary_container"> 
