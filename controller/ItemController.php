@@ -41,7 +41,7 @@ namespace ItemController {
     }
 
     function getAllItems() {
-        $statement = "SELECT * FROM items WHERE available = 1 AND ORDER BY bid_end_date DESC";
+        $statement = "SELECT * FROM items WHERE available = 1 ORDER BY bid_end_date DESC";
         $result = \DBHandler::execute($statement, true);
         $projects = array();
         foreach ($result as $res) {
@@ -61,6 +61,7 @@ namespace ItemController {
         }
         return $items;
     }
+
     function getAvailableItem($owner) {
         $statement = "SELECT * FROM items WHERE owner = '" . $owner . "' ORDER BY item_id DESC";
 
@@ -93,20 +94,20 @@ namespace ItemController {
             return $activeUser->getItemList();
         }
     }
-    
+
     function updateItemDetails($item_title, $description, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date) {
-        $statement = "UPDATE items SET item_title='". $item_title ."', description='". $description ."', bid_point_status='". $bid_point_status . "', available='" . $available . "', pickup_location='" . $pickup_location . "', return_location='". $return_location . "', borrow_start_date='". $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
+        $statement = "UPDATE items SET item_title='" . $item_title . "', description='" . $description . "', bid_point_status='" . $bid_point_status . "', available='" . $available . "', pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
         return DBHandler::execute($statement, false);
     }
-    
+
     function updateAvailable($item_id, $available) {
-        $statement = "UPDATE items SET available='".$available."'WHERE item_id='".$item_id."'";
+        $statement = "UPDATE items SET available='" . $available . "'WHERE item_id='" . $item_id . "'";
         return DBHandler::execute($statement, false);
     }
 
     function removeItem($item_id) {
         if (\UserController\canActiveUserModifyItem($item_id)) {
-            $statement = "DELETE FROM items WHERE item_id = '" . $item_id ."'";
+            $statement = "DELETE FROM items WHERE item_id = '" . $item_id . "'";
             $result = \DBHandler::execute($statement, false);
             return $result;
         } else {
@@ -115,19 +116,22 @@ namespace ItemController {
     }
 
     function searchItem($searchKeyword) {
-        $statement = "SELECT DISTINCT item_title, description
+        if (!empty($searchKeyword)) {
+            $statement = "SELECT DISTINCT item_id, item_title, description
                   FROM items
-                  WHERE item_title LIKE '{$searchKeyword}' OR
-                        description LIKE '{$searchKeyword}'";
+                  WHERE item_title LIKE '%" . $searchKeyword . "%' OR
+                        description LIKE '%" . $searchKeyword . "%'";
 
-        $result = \DBHandler::execute($statement, true);
+            $result = \DBHandler::execute($statement, true);
 
-        $projects = array();
-        foreach ($result as $res) {
-            $projects[] = new \Item($res[0], $res[1]);
+            $projects = array();
+            foreach ($result as $res) {
+                $projects[] = new \Item($res[0], $res[1], $res[2]);
+            }
+            return $projects;
+        } else {
+            return NULL;
         }
-
-        return $projects;
     }
 
 }

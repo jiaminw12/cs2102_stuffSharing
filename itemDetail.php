@@ -15,7 +15,6 @@ if (isset($_GET['page'])) {
 $item_id = htmlspecialchars($_GET["id"]);
 $itemList = ItemController\getItem($item_id);
 
-
 $highestPoint[1] = BidController\getTheHighestBidPoint($item_id);
 
 if (!empty($_POST['submit_bid'])) {

@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group ">
                 <input class="form-control" id="verify_password" name="verify_password" placeholder="Re-type password" required type="password">
             </div>
-            <button class="btn btn-success btn-lg btn-block" id="submit" name="submit" type="buttom">Submit</button>
+            <button class="btn btn-success btn-lg btn-block" id="submit" name="submit" type="button">Submit</button>
         </form>
         <br/>
     </div>
