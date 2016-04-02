@@ -116,11 +116,12 @@ namespace ItemController {
     }
 
     function searchItem($searchKeyword) {
+		$searchKeyword = strtoupper($searchKeyword);
         if (!empty($searchKeyword)) {
             $statement = "SELECT DISTINCT item_id, item_title, description
                   FROM items
-                  WHERE item_title LIKE '%" . $searchKeyword . "%' OR
-                        description LIKE '%" . $searchKeyword . "%'";
+                  WHERE UPPER(item_title) LIKE '%" . $searchKeyword . "%' OR
+                        UPPER(description) LIKE '%" . $searchKeyword . "%'";
 
             $result = \DBHandler::execute($statement, true);
 
