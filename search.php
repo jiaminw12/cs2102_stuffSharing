@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </script>
 
 <div class="row">
-    <p>testing 2</p>
     <form method="post" role="form">
         <div class="form-group">
             <div id="imaginary_container"> 
@@ -39,23 +38,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </form>
-
+    <p></p>
     <div class="large-12 text-center columns">
-        <h3><?php echo $searchKeyword; ?></h3>
+        <br>
+        <h3 class="white"><b><?php echo $searchKeyword; ?></b></h3>
         <br>
 
         <?php
         $itemList = ItemController\searchItem($searchKeyword);
         if ($itemList !== NULL) {
             foreach ($itemList as $item) {
+                $title = $item[1];
+                $desc = $item[2];
                 ?>
                 <div class="row">
-                    <hr/>
                     <div class="col-md-6">
-                        <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
-                            <p></p>
-                            <?php echo $item->getDescription(); ?>
-                            <a href="itemDetail.php?id=<?php echo $item->getItemId(); ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
+                        <h4 class = "text-left white"><b><?php echo $title ?></b>
+                            <br>
+                            <p class="white"><?php echo $desc ?></p>
+                            <br>
+                            <a href="itemDetail.php?id=<?php echo $item[0] ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </h4>
                     </div>
                 </div>

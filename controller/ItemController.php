@@ -94,9 +94,10 @@ namespace ItemController {
         }
     }
 
-    function updateItemDetails($item_title, $description, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date) {
-        $statement = "UPDATE items SET item_title='" . $item_title . "', description ='" . $description . "', bid_point_status='" . $bid_point_status . "', available='" . $available . "', pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
-        return DBHandler::execute($statement, false);
+    function updateItemDetails($item_id, $item_title, $description, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date) {
+        $statement = "UPDATE items SET item_title='" . $item_title . "', description ='" . $description . "', bid_point_status=" . $bid_point_status . ", available=" . $available . ", pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
+        \DBHandler::execute($statement, false);
+        header("Location: itemDetail.php?id=". $item_id);
     }
 
     function updateAvailable($item_id, $available) {
@@ -127,7 +128,7 @@ namespace ItemController {
 
             $projects = array();
             foreach ($result as $res) {
-                $projects[] = new \Item($res[0], $res[1], $res[2]);
+                $projects[] = $res;
             }
             return $projects;
         } else {
