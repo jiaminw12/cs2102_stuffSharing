@@ -8,11 +8,11 @@ namespace BorrowController {
 
     function createNewBorrow($owner, $borrower, $item_id, $status) {
         date_default_timezone_set("Asia/Singapore");
-        $statement = "INSERT INTO borrows(owner, borrower, item_id, status) VALUES ('{$owner}, '{$borrower}', {$item_id}', {$status}')";
+        $statement = "INSERT INTO borrows(owner, borrower, item_id, status) VALUES ('{$owner}', '{$borrower}', '{$item_id}', '{$status}')";
         $result = \DBHandler::execute($statement, false);
 
         if (!$result) {
-            return null;
+            return NULL;
         } else {
             return new \Borrow($owner, $borrower, $item_id, $status);
         }
@@ -44,7 +44,7 @@ namespace BorrowController {
 
     function updateStatus($owner, $borrower, $item_id, $status) {
         $statement = "UPDATE borrows SET status='{$status}'WHERE owner='" . $owner . "'AND item_id='" . $item_id . "' AND borrower='" . $borrower . "'";
-        return DBHandler::execute($statement, false);
+        return \DBHandler::execute($statement, false);
     }
 
     function removeBorrow($owner, $borrower, $item_id) {

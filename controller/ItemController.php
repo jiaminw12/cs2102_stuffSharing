@@ -95,13 +95,14 @@ namespace ItemController {
     }
 
     function updateItemDetails($item_title, $description, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date) {
-        $statement = "UPDATE items SET item_title='" . $item_title . "', description='" . $description . "', bid_point_status='" . $bid_point_status . "', available='" . $available . "', pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
+        $statement = "UPDATE items SET item_title='" . $item_title . "', description ='" . $description . "', bid_point_status='" . $bid_point_status . "', available='" . $available . "', pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
         return DBHandler::execute($statement, false);
     }
 
     function updateAvailable($item_id, $available) {
-        $statement = "UPDATE items SET available='" . $available . "'WHERE item_id='" . $item_id . "'";
-        return DBHandler::execute($statement, false);
+        $statement = "UPDATE items SET available=" . $available . " WHERE item_id ='" . $item_id . "'";
+        \DBHandler::execute($statement, false);
+        header("Location: itemDetail.php?id=". $item_id);
     }
 
     function removeItem($item_id) {

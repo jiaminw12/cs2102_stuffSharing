@@ -11,7 +11,7 @@ namespace BidController {
 
         $owner = $item_id->getOwner();
         $bidder = $_SESSION['username'];
-        $statement = "INSERT INTO bids (owner, bidder, item_id, bid_point) VALUES ('{$owner}, '{$bidder}', {$item_id}', {$bid_point}')";
+        $statement = "INSERT INTO bids (owner, bidder, item_id, bid_point) VALUES ('{$owner}', '{$bidder}', ' {$item_id}', ' {$bid_point}')";
         $result = \DBHandler::execute($statement, false);
 
         if (!$result) {
@@ -22,10 +22,6 @@ namespace BidController {
     }
 
     function getAllBids() {
-        $executingUser = isset($_SESSION['username']) ? \UserController\getUser($_SESSION['username']) : null;
-        if ($executingUser == null || $executingUser->getAdmin() != 0) {
-            return null;
-        }
 
         $statement = "SELECT * FROM bids";
         $result = \DBHandler::execute($statement, true);

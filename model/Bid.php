@@ -8,10 +8,9 @@ class Bid {
     private $bidder;
     private $item_id;
     private $bid_point;
-    private $created_date;
 
     private function save() {
-        $statement = "UPDATE bid SET bid_point={$this->bid_point} ' WHERE item_id={$this->item_id} ' AND ' bidder='{$this->bidder} ' AND ' owner='{$this->owner}";
+        $statement = "UPDATE bids SET bid_point={$this->bid_point} ' WHERE item_id={$this->item_id} ' AND ' bidder='{$this->bidder} ' AND ' owner='{$this->owner}";
         return DBHandler::execute($statement, false);
     }
 
