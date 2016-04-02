@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $admin = 0;
     }
-    echo $admin;
     $username = $_POST["username"];
     $email = $_POST["email"];
     $password = $_POST["password"];
@@ -44,19 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<? ob_start(); ?>
-
-<script type="text/javascript">
-    // When the document is ready
-    $(document).ready(function() {
-        $('#date_of_birth').datepicker({});
-    });
-</script>
-
+<?php ob_start(); ?>
 <br/>
 <div class="inner cover container">
     <div class="row">
-
         <?php
         include_once 'template/message.php'
         ?>
@@ -85,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group ">
                 <input class="form-control" id="verify_password" name="verify_password" placeholder="Re-type password" required type="password">
             </div>
-            <button class="btn btn-success btn-lg btn-block" id="submit" name="submit" type="button">Submit</button>
+            <button class="btn btn-success btn-lg btn-block" id="submit" name="submit" type="submit">Submit</button>
         </form>
         <br/>
     </div>
