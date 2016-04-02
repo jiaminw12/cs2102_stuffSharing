@@ -33,12 +33,10 @@ namespace BorrowController {
     function getAllBorrowsByUser($borrower) {
         $statement = "SELECT * FROM borrows WHERE borrower='" . $borrower . "'";
         $result = \DBHandler::execute($statement, true);
-
         $borrowList = array();
         foreach ($result as $res) {
-            $borrowList[] = new \Borrow($res[0], $res[1], $res[2], $res[3], $res[4]);
+            $borrowList[] = new \Borrow($res[0], $res[1], $res[2], $res[3]);
         }
-
         return $borrowList;
     }
 

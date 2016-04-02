@@ -15,11 +15,39 @@ if (isset($_GET['page'])) {
 
 $item_id = htmlspecialchars($_GET["id"]);
 
-if (!empty($_POST['submit_bid'])) {
-    // get the amout
-    // do math
-    // then update to usercontroller
-    // insert into bids
+if ($_POST['submit_bid']) {
+    $owner = $_POST['owneremail'];
+    $bidder = UserController\getEmail($username);
+    $latestPoint = $_POST['latest_user_bid_point'];
+    $curHighPoint = $_POST['curHighestPoint'];
+    if ($latestPoint < $curHighPoint || $latestPoint == $curHighPoint) {
+        $message = "Current bid point must higher than current highest bid point.";
+        $message_type = "danger";
+    } else {
+        $userPoint = UserController\getUserBidPoint($username);
+        $pPoint = $_POST['prevPoint'];
+        if ($pPoint == 0) {
+            $bidPointToDeduct = $latestPoint;
+        } else {
+            $bidPointToDeduct = $latestPoint - $pPoint;
+        }
+        if ($bidPointToDeduct > $userPoint[0]) {
+            $message = "No enough points to bid.";
+            $message_type = "danger";
+        } else {
+            $bid_point = $latestPoint;
+            // check whether is exist
+            $status = BidController\getSelectedBidByUserAndItemID($bidder, $item_id);
+            if ($status == NULL) {
+                $bids = BidController\createNewBid($owner, $bidder, $item_id, $bid_point);
+            } else {
+                $bids = BidController\updateBidPoint($owner, $bidder, $item_id, $bid_point);
+            }
+            $finalPoint = $userPoint[0] - $bidPointToDeduct;
+            UserController\updateUserBidPoint($username, $finalPoint);
+            header("Location: itemDetail.php?id=" . $item_id);
+        }
+    }
 }
 
 if ($_POST['submit_borrow']) {
@@ -30,16 +58,13 @@ if ($_POST['submit_borrow']) {
 
     $borrows = BorrowController\createNewBorrow($owner, $borrower, $item_id, $status);
     $ua = ItemController\updateAvailable($item_id, 0);
-    $message = "New borrow transaction added";
-    $message_type = "success";
-    
 }
 ?>
 
 <?php ob_start(); ?>
 
 <div class="container">
-    <h1 class="black">tr</h1>
+
     <?php
     include_once 'template/message.php';
     ?>
@@ -68,7 +93,7 @@ if ($_POST['submit_borrow']) {
                 <p>Loan date: <?php echo $item->getBorrowStartDate() ?> <span class="glyphicon glyphicon-arrow-right"></span> <?php echo $item->getBorrowEndDate(); ?></p>
                 <p></p>
                 <?php
-                if (UserController\isSignedIn() && $item->getAvailable() != 0 ) {
+                if (UserController\isSignedIn() && $item->getAvailable() != 0) {
                     if (strcmp(UserController\getUsername($item->getOwner()), $username) !== 0) {
                         if ($item->getBidPointStatus() > 0) {
                             ?>
@@ -77,24 +102,29 @@ if ($_POST['submit_borrow']) {
                                 if (BidController\getSelectedBidBoolean($item_id)) {
                                     $bidList = BidController\getTheHighestBidPoint($item_id);
                                     foreach ($bidList as $bidDetail) {
-                                        $bidder = $bidDetail->getBidder();
-                                        $highestBidPoint = $bidDetail->getBidPoint();
+                                        $currentHighestBidPoint = $bidDetail[0];
                                         ?>
-                                    <p>Current Highest Bid Point : <?php echo $highestBidPoint; ?></p>
+                                    <p><b>Current Highest Bid Point : <?php echo $currentHighestBidPoint; ?></b></p>
                                     <?php
                                 }
                                 $result = BidController\getSelectedBidByUserAndItemID(UserController\getEmail($username), $item_id);
-                                $value = $result;
+                                if ($result != NULL) {
+                                    $previousUserPoint = $result[0];
+                                } else {
+                                    $previousUserPoint = 0;
+                                }
                             } else {
-                                $value = $item->getBidPointStatus();
-                                echo $value;
+                                $currentHighestBidPoint = $item->getBidPointStatus();
+                                $previousUserPoint = 0;
                                 ?>
-                                <p>Current Highest Bid Point : <?php echo $value; ?></p>
+                                <p><b>Current Highest Bid Point : <?php echo $currentHighestBidPoint; ?></b></p>
                             <?php } ?>
                             <form method="POST" class="form" role="form">
+                                <input class="hidden" value="<?php echo $previousUserPoint ?>" name="prevPoint" id="prevPoint"/>
+                                <input class="hidden" value="<?php echo $currentHighestBidPoint ?>" name="curHighestPoint" id="curHighestPoint"/>
                                 <input class="hidden" value="<?php echo $owner_email ?>" name="owneremail" id="owneremail"/>
-                                <input class="form-control" id="bid_point" name="bid_point" placeholder="Bid Point" required type="integer" value="<?php echo $value + 1; ?>">
-                                <button class="btn btn-success btn-lg btn-block" id="submit" name="submit_bid" type="button">Bid</button>
+                                <input class="form-control" id="latest_user_bid_point" name="latest_user_bid_point" required type="integer" value="<?php echo $previousUserPoint; ?>">
+                                <input class="btn btn-success btn-lg btn-block" id="submit_bid" name="submit_bid" type="submit" value="Bid">
                             </form>
                         <?php } else { ?>
                             <form method="POST" class="form" role="form">

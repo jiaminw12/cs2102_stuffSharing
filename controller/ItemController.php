@@ -27,7 +27,6 @@ namespace ItemController {
 
     function getItem($item_id) {
         $statement = "SELECT * FROM items WHERE item_id LIKE '{$item_id}'";
-
         $result = \DBHandler::execute($statement, true);
 
         if (count($result) != 1) {
@@ -78,7 +77,7 @@ namespace ItemController {
         $result = \DBHandler::execute($statement, true);
 
         if (count($result) != 1) {
-            return null;
+            return NULL;
         } else {
             $result = $result[0];
             return $result[1];

@@ -82,7 +82,7 @@ namespace UserController {
             return $result[0];
         }
     }
-    
+
     function getEmail($username) {
         $statement = "SELECT email FROM userinfo WHERE username ='" . $username . "'";
         $result = \DBHandler::execute($statement, true);
@@ -142,9 +142,17 @@ namespace UserController {
         return $userList;
     }
 
-    function UpdateBidPoint($owner, $bid_point) {
-        $statement = "UPDATE userinfo SET bid_point='" . $bid_point . "'WHERE owner='" . $owner . "'";
-        return DBHandler::execute($statement, false);
+    function getUserBidPoint($username) {
+        $statement = "SELECT bid_point FROM userinfo WHERE username='" . $username . "'";
+        $result = \DBHandler::execute($statement, true);
+        $bidPointList = $result[0];
+        return $bidPointList;
+    }
+
+    function updateUserBidPoint($username, $bid_point) {
+        $statement = "UPDATE userinfo SET bid_point=" . $bid_point . " WHERE username='" . $username . "'";
+        \DBHandler::execute($statement, false);
+        return TRUE;
     }
 
     function canActiveUserModifyUser($username) {
@@ -163,11 +171,6 @@ namespace UserController {
         $activeUser = getActiveUser();
         $bidToModify = \BidController\getBid($itemID);
         return $activeUser && $bidToModify && $activeUser->canModifyBid($bidToModify);
-    }
-
-    function recalculateBidPoint($username, $bid_point) {
-        $statement = "UPDATE userinfo SET bid_point='".$bid_point."'WHERE username='". $username. "'";
-        return DBHandler::execute($statement, false);
     }
 
     function removeUser($username) {

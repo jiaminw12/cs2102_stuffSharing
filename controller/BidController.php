@@ -6,16 +6,14 @@ namespace BidController {
     include_once __DIR__ . '/../db/DBHandler.php';
     include_once __DIR__ . '/UserController.php';
 
-    function createNewBid($item_id, $bid_point) {
+    function createNewBid($owner, $bidder, $item_id, $bid_point) {
         date_default_timezone_set("Asia/Singapore");
 
-        $owner = $item_id->getOwner();
-        $bidder = $_SESSION['username'];
-        $statement = "INSERT INTO bids (owner, bidder, item_id, bid_point) VALUES ('{$owner}', '{$bidder}', ' {$item_id}', ' {$bid_point}')";
+        $statement = "INSERT INTO bids (owner, bidder, item_id, bid_point) VALUES ('{$owner}', '{$bidder}', '{$item_id}', '{$bid_point}')";
         $result = \DBHandler::execute($statement, false);
 
         if (!$result) {
-            return null;
+            return NULL;
         } else {
             return new \Bid($owner, $bidder, $item_id, $bid_point);
         }
@@ -59,15 +57,16 @@ namespace BidController {
         return $bidList;
     }
 
-    // Get the bid record for user based on item_id 
+    // Get the bid record for user based on item_id and current_user
     function getSelectedBidByUserAndItemID($bidder, $item_id) {
-        $statement = "SELECT * FROM bids WHERE bidder = '" . $bidder . "' AND item_id='" . $item_id . "'";
+        $statement = "SELECT bid_point FROM bids WHERE bidder='" . $bidder . "' AND item_id='" . $item_id . "'";
         $result = \DBHandler::execute($statement, true);
-
-        $bidList = $result[0];
-        $bidList = new \Bid($result[0], $result[1], $result[2], $result[3], $result[4]);
-
-        return $bidList;
+        if (count($result) == 1){
+            $bidList = $result[0];
+            return $bidList;
+        } else {
+            return NULL;
+        }
     }
 
     // To check whether "BIDS" contains any highest bid_point based on the item_id
@@ -91,11 +90,13 @@ namespace BidController {
             }
         return $bidList;
     }
-
+    
     // Update the bidPoint based on the latest highest bid points
     function updateBidPoint($owner, $bidder, $item_id, $bid_point) {
-        $statement = "UPDATE bids SET bid_point='{$bid_point}'WHERE owner='" . $owner . "'AND item_id='" . $item_id . "' AND bidder='" . bidder . "'";
-        return DBHandler::execute($statement, false);
+        $statement = "UPDATE bids SET bid_point=" . $bid_point . " WHERE owner='" . $owner . "' AND item_id='" . $item_id . "' AND bidder='" . $bidder . "'";
+        $RESULT = \DBHandler::execute($statement, false);
+        print_r($RESULT);
+        return TRUE;
     }
 
     //  User remove their bid
@@ -106,7 +107,7 @@ namespace BidController {
             $owner = $result[0];
             $bid_point = $result1[0];
 
-            $statement3 = \UserController\recalculateBidPoint($owner, $bid_point);
+            $statement3 = \UserController\updateUserBidPoint($owner, $bid_point);
             $result2 = \DBHandler::execute($statement3, false);
 
             $statement2 = "DELETE FROM bids WHERE item_id = '{$item_id}' AND bidder = '{$bidder}'";
@@ -114,7 +115,7 @@ namespace BidController {
 
             return $result;
         } else {
-            return null;
+            return NULL;
         }
     }
 
@@ -136,7 +137,7 @@ namespace BidController {
         $result3 = \DBHandler::execute($statement3, true);
         foreach ($result3 as $res) {
             if ($res[3] < $highest_bid_point) {
-                $statement4 = \UserController\recalculateBidPoint($res[0], $res[3]);
+                $statement4 = \UserController\updateUserBidPoint($res[0], $res[3]);
                 $result4 = \DBHandler::execute($statement4, false);
                 $statement = "DELETE FROM bids WHERE item_id='" . $item_id . "' AND bidder='" . $res[1] . "'";
                 \DBHandler::execute($statement, false);

@@ -8,19 +8,17 @@ class Borrow {
     private $borrower;
     private $item_id;
     private $status;
-    private $created_date;
 
     private function save() {
         $statement = "UPDATE borrows SET status={$this->status} ' WHERE item_id={$this->item_id} ' AND ' borrower='{$this->borrower} ' AND ' owner='{$this->owner}";
         return DBHandler::execute($statement, false);
     }
 
-    public function __construct($owner, $borrower, $item_id, $status, $created_date) {
+    public function __construct($owner, $borrower, $item_id, $status) {
         $this->owner = $owner;
         $this->borrower = $borrower;
         $this->item_id = $item_id;
         $this->status = $status;
-        $this->created_date = $created_date;
     }
 
     public function getOwner() {
@@ -37,10 +35,6 @@ class Borrow {
 
     public function getStatus() {
         return $this->status;
-    }
-    
-    public function getCreatedDate() {
-        return $this->created_date;
     }
 
     public function setOwner($owner) {
@@ -60,11 +54,6 @@ class Borrow {
 
     public function setStatus($status) {
         $this->status = $status;
-        return $this->save();
-    }
-    
-        public function setCreatedDate($created_date) {
-        $this->created_date = $created_date;
         return $this->save();
     }
 
