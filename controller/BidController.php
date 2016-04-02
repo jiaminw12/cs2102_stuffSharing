@@ -85,7 +85,10 @@ namespace BidController {
     function getTheHighestBidPoint($item_id) {
         $statement = "SELECT bidder, MAX(bid_point) FROM bids WHERE item_id='" . $item_id . "'";
         $result = \DBHandler::execute($statement, true);
-        $bidList = $result[0];
+        $bidList = array();
+            foreach ($result as $res) {
+                $bidList[] = $res;
+            }
         return $bidList;
     }
 
