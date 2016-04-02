@@ -17,6 +17,7 @@ namespace UserController {
             return false;
         }
     }
+    
 
     function signOut() {
         unset($_SESSION["username"]);
@@ -52,6 +53,11 @@ namespace UserController {
             header('Location:' . 'index.php');
         }
     }
+    
+   // function updateProfile($username, $name, $contact_num, $password, $email) {
+    //    $statement = "UPDATE unserinfo SET username='" . $username . "', name ='" . $name . "', contact_num='" . $contact_num . "', password='" . "' WHERE email = '" .$email ."'";
+     //   return DBHandler::execute($statement, false);
+   // }
 
     function getUser($username) {
         $statement = "SELECT * FROM userinfo WHERE username ='" . $username . "'";

@@ -4,43 +4,17 @@
   include_once "controller/UserController.php";
   include_once "controller/ItemController.php";
   include_once "controller/BidController.php";
+  include_once "controller/BorrowController.php";
 
   $username = $_SESSION["username"];
-  // update profile
-  if(isset($_POST['update-profile-submit'])) {
-            $params = array($_POST["first-name"], $_POST["last-name"], $_POST["gender"], $_POST["description"], $username);
-            $query = "UPDATE users SET first_name = $1, last_name = $2, gender = $3, description = $4 WHERE username = $5;";
-            $result = pg_query_params($dbconn, $query, $params);
-            if ($result) {
-                create_notification('success', 'Profile updated!');
-            } else {
-                die("Query failed: " . pg_last_error());
-            }
-        }
-  // update password
-  if(isset($_POST['update-password-submit'])) {
-            $params = array($_POST["current-password"], $username);
-            $query = "SELECT * FROM users WHERE password = $1 AND username = $2";
-            $result = pg_query_params($dbconn, $query, $params);
-            if (pg_num_rows($result) > 0) {
-                $params = array($_POST["new-password"], $username);
-                $query = "UPDATE users SET password = $1 WHERE username = $2";
-                $result = pg_query_params($dbconn, $query, $params);
-                if ($result) {
-                    create_notification('success', 'Password updated!');
-                } else {
-                    die("Query failed: " . pg_last_error());
-                }
-            } else {
-                create_notification('danger', 'Current password is not correct.');
-            }
-        }
-  
+
 ?>
 <?php
     $userList = UserController\getUser($username);
     $owner = $userList->getEmail();
     $itemList = ItemController\getAvailableItem($owner);
+    
+    
 ?>
 
 
@@ -60,7 +34,7 @@
       <li class="active"><a href="#home" data-toggle="tab">Profile</a></li>
       <li><a href="#profile" data-toggle="tab">Password</a></li>
       <li><a href="#item" data-toggle="tab">Items</a></li>
-      <li><a href="#bidHistory" data-toggle="tab">Bid History</a></li>
+      
     </ul>
     <div id="myTabContent" class="tab-content">
       <div class="tab-pane active in" id="home" align="left">
@@ -110,14 +84,16 @@
 							</tr>
 						</thead>
                                                 <tbody>
-                                                    <?php foreach ($itemList as $item) { ?>
+                                                    <?php 
+                                                    
+                                                    foreach ($itemList as $item) { ?>
                                                     <tr>
                                                         <td><?php  echo $item->getItemTitle(); ?></td>
                                                         <td><?php
-                                                          // $itemID = $item->getItemId();
-                                                          // $bidPoint = BidController\getSelectedBids($itemID);
-                                                           //echo $item->getBidPoint();
-                                                           ?> need to complete
+                                                          $item_avid =  $item->getItemId();
+                                                          $bidList = BidController\getTheHighestBidPoint($item_avid);
+                                                          echo $bidList[0];
+                                                           ?>
                                                         </td> 
                                                         <td><button class="btn btn-primary">edit</button><button class="btn btn-primary">delete</button></td>
                                                     </tr>
@@ -139,14 +115,32 @@
 								<th>Title</th>
 								<th>Borrow Start Date</th>
 								<th>Borrow End Date</th>
+                                                                <th>Return Location</th>
+                                                                
 							</tr>
 						</thead>
                                                 <tbody>
-                                                    <?php foreach ($itemList as $item) { ?>
+                                                    <?php 
+                                                        
+                                                        $borroweremail = $userList->getEmail();
+                                                        
+                                                        $borrow = BorrowController\getAllBorrowsByUser($borroweremail);
+                                                                                                                
+
+                                                        foreach ($borrow as $borrowitem) {  ?>
                                                     <tr>
-                                                        <td><?php  echo $item->getItemTitle(); ?></td>
-                                                        <td><?php echo $item->getBorrowStartDate() ?> </td> 
-                                                        <td><?php echo $item->getBorrowEndDate() ?></td>
+                                                        <td><?php 
+                                                             $borrow_id= $borrowitem->getItemId();
+                                                             
+                                                             $borrowtitle = ItemController\getItem($borrow_id);
+                                                             
+                                                        foreach($borrowtitle as $titleBor){
+                                                            
+                                                               echo $titleBor->getItemTitle();
+                                                             ?>title--</td>
+                                                        <td><?php  echo $titleBor->getBorrowStartDate(); ?>start--</td> 
+                                                        <td><?php  echo $titleBor->getBorrowEndDate(); ?>end--</td> 
+                                                        <td><?php echo $titleBor->getReturnLocation(); } ?></td>
                                                     </tr>
                                                     <?php } ?>
                                                 </tbody>
@@ -166,20 +160,33 @@
 							<tr>
 								<th>Title</th>
 								<th>Bid End Date</th>
+                                                                <th>Current Bid Point</th>
                                                                 <th>Bid Point</th>
-								<th>Current Bid Point</th>
                                                                 <th class="td-actions"></th>
                                                                 
                                                                 
 							</tr>
 						</thead>
                                                 <tbody>
-                                                    <?php foreach ($itemList as $item) { ?>
+                                                    <?php 
+                                                    $bidder = $userList->getEmail();
+                                                    $bidderList = BidController\getSelectedBidByUser($bidder);
+                                                    foreach ($bidderList as $bidItem) { ?>
                                                     <tr>
-                                                        <td><?php  echo $item->getItemTitle(); ?></td>
-                                                        <td><?php echo $item->getBidEndDate() ?> </td> 
-                                                        <td><?php // echo $item->getBidList() ?>Need Complete</td>
-                                                        <td><?php// echo $item->getAvailable() ?>Need Complete</td>
+                                                        <td><?php  
+                                                        $item_id = $bidItem->getItemId();
+                                                        $item_title = ItemController\getItem($item_id);
+                                                        foreach($item_title as $titleItem){
+                                                            echo $titleItem->getItemTitle();
+                                                         ?></td>
+                                                        
+                                                        <td><?php echo $titleItem->getBidEndDate();  } ?></td> 
+                                                        <td><?php
+                                                            $item_id =  $item->getItemId();
+                                                            $bidList = BidController\getTheHighestBidPoint($item_id);
+                                                            echo $bidList[0];
+                                                             ?></td>
+                                                        <td><input type="text" value="<?php echo $bidItem->getBidPoint(); ?>"class="input-xlarge" name="update-bid"></td>
                                                         <td><button class="btn btn-primary">Update</button></td>
                                                     </tr>
                                                     <?php } ?>
@@ -193,15 +200,6 @@
                 </div>
                 
         	
-    	</form>
-      </div>
-      <div class="tab-pane fade" id="bidHistory" align="left">
-    	<form id="tab2">
-        	<label>Bidding History</label>
-        	<input type="password" class="input-xlarge">
-        	<div>
-        	    <button class="btn btn-primary">Update</button>
-        	</div>
     	</form>
       </div>
   </div>
