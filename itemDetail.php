@@ -68,7 +68,7 @@ if ($_POST['submit_borrow']) {
                 <p>Loan date: <?php echo $item->getBorrowStartDate() ?> <span class="glyphicon glyphicon-arrow-right"></span> <?php echo $item->getBorrowEndDate(); ?></p>
                 <p></p>
                 <?php
-                if (UserController\isSignedIn()) {
+                if (UserController\isSignedIn() && $item->getAvailable() != 0 ) {
                     if (strcmp(UserController\getUsername($item->getOwner()), $username) !== 0) {
                         if ($item->getBidPointStatus() > 0) {
                             ?>
