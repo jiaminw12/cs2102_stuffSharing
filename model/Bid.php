@@ -1,7 +1,6 @@
 <?php
 
 include_once __DIR__ . '/../db/DBHandler.php';
-include_once __DIR__ . '/../helper/DateHelper.php';
 
 class Bid {
 
@@ -16,12 +15,11 @@ class Bid {
         return DBHandler::execute($statement, false);
     }
 
-    public function __construct($owner, $bidder, $item_id, $bid_point, $created_date) {
+    public function __construct($owner, $bidder, $item_id, $bid_point) {
         $this->owner = $owner;
         $this->bidder = $bidder;
         $this->item_id = $item_id;
         $this->bid_point = $bid_point;
-        $this->created_date = $created_date;
     }
 
     public function getOwner() {
@@ -39,11 +37,7 @@ class Bid {
     public function getBidPoint() {
         return $this->bid_point;
     }
-    
-    public function getCreatedDate() {
-        return $this->created_date;
-    }
-
+   
     public function setOwner($owner) {
         $this->owner = $owner;
         return $this->save();
@@ -64,11 +58,6 @@ class Bid {
         return $this->save();
     }
     
-        public function setCreatedDate($created_date) {
-        $this->created_date = $created_date;
-        return $this->save();
-    }
-
 }
 
 ?>

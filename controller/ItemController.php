@@ -5,7 +5,6 @@ namespace ItemController {
     include_once __DIR__ . '/../model/Item.php';
     include_once __DIR__ . '/../db/DBHandler.php';
     include_once __DIR__ . '/UserController.php';
-    include_once __DIR__ . '/../helper/ArrayHelper.php';
 
     function createNewItem($item_id, $item_title, $description, $category, $min_bid, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image) {
         date_default_timezone_set("Asia/Singapore");

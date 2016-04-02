@@ -19,11 +19,6 @@ namespace BorrowController {
     }
 
     function getAllBorrows() {
-        $executingUser = isset($_SESSION['username']) ? \UserController\getUser($_SESSION['username']) : null;
-        if ($executingUser == null || $executingUser->getAdmin() != 0) {
-            return null;
-        }
-
         $statement = "SELECT * FROM borrows";
         $result = \DBHandler::execute($statement, true);
 
@@ -35,13 +30,8 @@ namespace BorrowController {
         return $borrowList;
     }
 
-    function getAllBorrowsByUser() {
-        $executingUser = isset($_SESSION['username']) ? \UserController\getUser($_SESSION['username']) : null;
-        if ($executingUser == null) {
-            return null;
-        }
-
-        $statement = "SELECT * FROM borrows WHERE borrower='" . $_SESSION['username'] . "'";
+    function getAllBorrowsByUser($borrower) {
+        $statement = "SELECT * FROM borrows WHERE borrower='" . $borrower . "'";
         $result = \DBHandler::execute($statement, true);
 
         $borrowList = array();

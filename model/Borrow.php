@@ -2,7 +2,7 @@
 
 include_once __DIR__ . '/../db/DBHandler.php';
 
-class Bid {
+class Borrow {
 
     private $owner;
     private $borrower;

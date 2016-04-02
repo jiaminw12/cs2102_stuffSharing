@@ -37,6 +37,7 @@ namespace BidController {
 
         return $bidList;
     }
+    
     function getSelectedBids($item_id) {
         $statement = "SELECT * FROM bids WHERE item_id='" . $item_id . "'";
         $result = \DBHandler::execute($statement, true);
@@ -86,22 +87,22 @@ namespace BidController {
     }
 
     function getTheHighestBidPoint($item_id) {
-        $statement = "SELECT borrower, MAX(bid_point) FROM bids WHERE item_id='" . $item_id . "'";
+        $statement = "SELECT bidder, MAX(bid_point) FROM bids WHERE item_id='" . $item_id . "'";
         $result = \DBHandler::execute($statement, true);
         $bidList = $result[0];
         return $bidList;
     }
 
     // Update the bidPoint based on the latest highest bid points
-    function updateBidPoint($owner, $borrower, $item_id, $bid_point) {
+    function updateBidPoint($owner, $bidder, $item_id, $bid_point) {
         $statement = "UPDATE bids SET bid_point='{$bid_point}'WHERE owner='" . $owner . "'AND item_id='" . $item_id . "' AND bidder='" . bidder . "'";
         return DBHandler::execute($statement, false);
     }
 
     //  User remove their bid
-    function removeBidByUser($item_id, $borrower) {
+    function removeBidByUser($item_id, $bidder) {
         if (\UserController\canActiveUserModifyBid($item_id)) {
-            $statement1 = \BidController\getSelectedBidByUser($borrower);
+            $statement1 = \BidController\getSelectedBidByUser($bidder);
             $result1 = \DBHandler::execute($statement1, false);
             $owner = $result[0];
             $bid_point = $result1[0];
@@ -109,7 +110,7 @@ namespace BidController {
             $statement3 = \UserController\recalculateBidPoint($owner, $bid_point);
             $result2 = \DBHandler::execute($statement3, false);
 
-            $statement2 = "DELETE FROM bids WHERE item_id = '{$item_id}' AND borrower = '{$borrower}'";
+            $statement2 = "DELETE FROM bids WHERE item_id = '{$item_id}' AND bidder = '{$bidder}'";
             $result = \DBHandler::execute($statement2, false);
 
             return $result;
@@ -122,12 +123,12 @@ namespace BidController {
         // return the highest point
         $statement1 = \BidController\getTheHighestBidPoint($item_id);
         $result1 = \DBHandler::execute($statement1, false);
-        $borrower = $result1[0];
+        $bidder = $result1[0];
         $highest_bid_point = $result1[1];
         $status = 1;
 
         // insert into borrow table
-        $statement2 = \BorrowController\createNewBorrow($owner, $borrower, $item_id, $status);
+        $statement2 = \BorrowController\createNewBorrow($owner, $bidder, $item_id, $status);
         \DBHandler::execute($statement2, false);
 
         // delete, return the points
