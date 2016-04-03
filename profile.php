@@ -7,6 +7,8 @@
   include_once "controller/BorrowController.php";
 
   $username = $_SESSION["username"];
+  
+  $_SESSION['previous_location'] = 'profile';
 
 ?>
 <?php
@@ -92,10 +94,10 @@
                                                         <td><?php
                                                           $item_avid =  $item->getItemId();
                                                           $bidList = BidController\getTheHighestBidPoint($item_avid);
-                                                          echo $bidList[0];
+                                                          echo $bidList[0][0];
                                                            ?>
                                                         </td> 
-                                                        <td><button class="btn btn-primary">edit</button><button class="btn btn-primary">delete</button></td>
+                                                        <td><a href="edit_item.php?id=<?php echo $item_avid ?>" class="btn btn-primary white">edit</a><button class="btn btn-primary">delete</button></td>
                                                     </tr>
                                                     <?php } ?>
                                                 </tbody>

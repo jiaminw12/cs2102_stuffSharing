@@ -7,6 +7,7 @@ include_once "controller/CategoryController.php";
 
 $page = $current_page;
 $username = $_SESSION["username"];
+$previousPage = $_SESSION['previous_location'];
 
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
@@ -49,9 +50,11 @@ if ($_POST['submit']) {
 
     if (empty($errors) == true) {
         $items = ItemController\updateItemDetails($item_id, $item_title, $description, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date);
-        header("Location: itemDetail.php?id=". $item_id);
-        $message = "Updated item!";
-        $message_type = "success";
+        if ($previousPage === 'itemDetail'){
+            header("Location: itemDetail.php?id=". $item_id);
+        } else if ($previousPage === 'profile'){
+            header("Location: profile.php");
+        }
     } else {
         foreach ($errors as $err){
             $message = $err . " " . $message;
@@ -102,6 +105,7 @@ if ($_POST['submit']) {
 
 <br/>
 <div class="inner cover container">
+    <h1 class="black">eeqq</h1>
     <?php
     include_once 'template/message.php';
     $itemList = ItemController\getItem($item_id);

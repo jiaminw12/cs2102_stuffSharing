@@ -13,6 +13,8 @@ if (isset($_GET['page'])) {
     $page = $_GET['page'];
 }
 
+$_SESSION['previous_location'] = 'itemDetail';
+
 $item_id = htmlspecialchars($_GET["id"]);
 
 if ($_POST['submit_bid']) {
