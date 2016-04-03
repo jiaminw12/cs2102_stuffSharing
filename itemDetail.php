@@ -132,7 +132,9 @@ if ($_POST['submit_borrow']) {
                                 <input class="btn btn-success btn-lg btn-block" id="submit_borrow" name="submit_borrow" type="submit" value="Borrow">
                             </form>
                         <?php } ?>
-                    <?php } ?>
+                    <?php } else { ?>
+                                <a href="edit_item.php?id=<?php echo $item_id; ?>" class="btn btn-primary white">Edit Item <span class="glyphicon glyphicon-chevron-right"></span></a>
+                   <?php } ?>
                 <?php } ?>
             </div>
         </div>

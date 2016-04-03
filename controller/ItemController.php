@@ -6,7 +6,7 @@ namespace ItemController {
     include_once __DIR__ . '/../db/DBHandler.php';
     include_once __DIR__ . '/UserController.php';
 
-    function createNewItem($item_id, $item_title, $description, $category, $min_bid, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image) {
+    function createNewItem($item_id, $item_title, $description, $category, $bid_point_status, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date, $item_image) {
         date_default_timezone_set("Asia/Singapore");
         $owner = getUserEmail(($_SESSION['username']));
 

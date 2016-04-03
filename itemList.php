@@ -39,15 +39,6 @@ if (isset($_GET['page'])) {
     $page = $_GET['page'];
 }
 
-if (isset($_GET['item_title'])) {
-    $item_title = $_GET['item_title'];
-    $item = ItemController\getItem($item_title);
-    if (!isset($item)) {
-        $message = "Item Title " . $item_title . " not found";
-        $message_type = "danger";
-    }
-}
-
 if (isset($_POST['submit'])) {
     $errors = array();
     $file_name = $_FILES['image']['name'];
@@ -92,8 +83,8 @@ if (isset($_POST['submit'])) {
             $errors[] = "Borrow start date must be after bid end date.";
         }
     }
-
-    if ($borrow_end_date - $borrow_start_date < 0) {
+ 
+    if ($borrow_end_date < $borrow_start_date) {
         $errors[] = "Borrow end date must be after borrow start date.";
     }
 
@@ -114,7 +105,10 @@ if (isset($_POST['submit'])) {
         $message = "New item added";
         $message_type = "success";
     } else {
-        print_r($errors);
+        foreach ($errors as $err){
+            $message = $err . " " . $message;
+        }
+        $message_type = "danger";
     }
 }
 ?>
@@ -190,6 +184,7 @@ if (isset($_POST['submit'])) {
 
 <br/>
 <?php if (!isset($item)) { ?>
+
     <div class="inner cover container">
         <div class="row">
             <?php

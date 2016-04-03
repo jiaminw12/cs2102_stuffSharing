@@ -165,33 +165,6 @@ class Item {
         return time() <= strtotime($this->bid_end_date);
     }
 
-    public function getBidList() {
-        $statement = "SELECT * FROM bid WHERE item_id = {$this->item_id} ORDER BY bid_date DESC";
-
-        $result = DBHandler::execute($statement, true);
-
-        $bids= array();
-        foreach ($result as $res) {
-            $res[3] = \DateHelper\beautifyDateFromSql($res[3]);
-            $bids[] = new Bid($res[0], $res[1], $res[2], $res[3], $res[4]);
-        }
-
-        return bids;
-    }
-
-    public function getBidPoint() {
-        $statement = "SELECT MAX(bid_point) FROM bid WHERE item_id= {$this->item_id}";
-
-        $result = DBHandler::execute($statement, true);
-        
-
-        if (isset($result[0])) {
-            return $result[0];
-        } else {
-            return 0;
-        }
-    }
-
 }
 
 ?>
