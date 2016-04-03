@@ -17,6 +17,14 @@ namespace UserController {
             return false;
         }
     }
+    function isCorrectPassword($username,$password) {
+        $user = getUser($username);
+        if ($user->verifyPassword($password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
 
     function signOut() {
@@ -54,10 +62,18 @@ namespace UserController {
         }
     }
     
-   // function updateProfile($username, $name, $contact_num, $password, $email) {
-    //    $statement = "UPDATE unserinfo SET username='" . $username . "', name ='" . $name . "', contact_num='" . $contact_num . "', password='" . "' WHERE email = '" .$email ."'";
-     //   return DBHandler::execute($statement, false);
-   // }
+    function updateProfile($username, $name, $contact_num, $email) {
+        $statement = "UPDATE userinfo SET username='" . $username . "', name ='" . $name . "', contact_num='" . $contact_num . "' WHERE email = '" .$email ."'";
+        \DBHandler::execute($statement, false);
+        header("Location: profile.php");
+    }
+    
+    function updatePassword($password, $email) {
+        $statement = "UPDATE userinfo SET password='" . $password . "' WHERE email = '" .$email ."'";
+        \DBHandler::execute($statement, false);
+        header("Location: profile.php");
+    }
+    
 
     function getUser($username) {
         $statement = "SELECT * FROM userinfo WHERE username ='" . $username . "'";

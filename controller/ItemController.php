@@ -110,13 +110,14 @@ namespace ItemController {
     }
 
     function removeItem($item_id) {
-        if (\UserController\canActiveUserModifyItem($item_id)) {
+     //   if (\UserController\canActiveUserModifyItem($item_id)) {
             $statement = "DELETE FROM items WHERE item_id = '" . $item_id . "'";
-            $result = \DBHandler::execute($statement, false);
-            return $result;
-        } else {
-            return null;
-        }
+            \DBHandler::execute($statement, false);
+            header("Location: profile.php");
+    //    } else {
+    //        header("Location: profile.php");
+    //    }
+        
     }
 
     function searchItem($searchKeyword) {

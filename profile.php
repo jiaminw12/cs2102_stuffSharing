@@ -9,14 +9,62 @@
   $username = $_SESSION["username"];
   
   $_SESSION['previous_location'] = 'profile';
-
-?>
-<?php
     $userList = UserController\getUser($username);
     $owner = $userList->getEmail();
     $itemList = ItemController\getAvailableItem($owner);
-    
-    
+  
+  // on profile update
+        if(isset($_POST['update-profile-submit'])) {
+            $username = $_POST['username'];
+            $name = $_POST['name'];
+            $contact_num = $_POST['contact_num'];
+            $email = $userList->getEmail();
+            $userList = UserController\updateProfile($username, $name, $contact_num, $email);
+            $username = $userList->getUsername();
+            header("Location: profile.php");
+        }
+  
+  // update password
+    if(isset($_POST['update-password-submit'])) {
+            $currentpassword = $_POST['current-password'];
+            $newpassword = md5($_POST['new-password']);
+            if (UserController\isCorrectPassword($username, $currentpassword)){  // current password correct
+                $email = $userList->getEmail();
+                $userList = UserController\updatePassword($newpassword, $email);
+                header("Location: profile.php");
+            } else {
+                $message = "Wrong current password" + $currentpassword;
+                $message_type = "danger";
+            }
+           
+        }
+        
+  // delete
+    if(isset($_POST['delete-submit'])) {
+        $itemiD = $_POST['delete-itemID'] ;
+        $userList=ItemController\removeItem($itemiD);
+        echo "yoyo xia sdk";
+        header("Location: profile.php");
+    }
+ // update bid point
+    if(isset($_POST['update-bid'])) {
+        echo "haha";
+        $curbid = $_POST['curbid'];
+        $itemiD = $_POST['deletebid-itemID'] ;
+        $bid_point = $_POST['update-bidpoint'];
+        $owner = $_POST['updatebid-owner'];
+        $bidder = $userList->getEmail();
+        if ($curbid < $bid_point){
+            $message = "Not enough bid point";
+            $message_type = "danger";
+        } else {
+            $userList= BidController\updateBidPoint($owner, $bidder, $itemiD, $bid_point);
+            header("Location: profile.php");
+        }
+        
+    }
+        
+
 ?>
 
 
@@ -40,35 +88,35 @@
     </ul>
     <div id="myTabContent" class="tab-content">
       <div class="tab-pane active in" id="home" align="left">
-        <form id="tab">
+        <form id="tab" method='POST'>
             <label>Username</label><br>
-            <input type="text" value="<?php echo $userList->getUsername(); ?>" class="input-xlarge" name="username"><br>
+            <input type="text" value="<?php echo $userList->getUsername(); ?>" class="input-xlarge" name='username' id='input-username' placeholder='username'><br>
             <label>Name</label><br>
-            <input type="text" value="<?php echo $userList->getName(); ?>" class="input-xlarge" name ="name"><br>
+            <input type="text" value="<?php echo $userList->getName(); ?>" class="input-xlarge" name ='name' id='input-name' placeholder='name'><br>
             <label>Contact Number</label><br>
-            <input type="text" value="<?php echo $userList->getContactNum(); ?>" class="input-xlarge" name="contact_num"><br>
+            <input type="text" value="<?php echo $userList->getContactNum(); ?>" class="input-xlarge" name='contact_num' id='input-contact-num' placeholder='contact_num'><br>
             <label>Email</label><br>
             <?php echo $userList->getEmail(); ?><br>
             <label>Current bid point</label><br>
             <?php echo $userList->getBidPoint(); ?><br><br>
           <div align = "center">
-           <button class="btn btn-primary">Update</button>
+              <button class="btn btn-primary" name='update-profile-submit' type='submit'>Update</button>
         </div>
         </form>
       </div>
       <div class="tab-pane fade" id="profile" align="left">
-    	<form id="tab2">
+    	<form id="tab2" method='POST'>
                 <label>Current Password</label>
                 <input type="password" name='current-password' class="form-control" id="input-current-password" placeholder="Current password">
         	<label>New Password</label>
         	<input type="password" name='new-password' class="form-control" id="input-new-password" placeholder="New password">
         	<div>
-        	    <button class="btn btn-primary" name='update-password-submit' type="submit">Update</button>
+        	    <button class="btn btn-primary" name='update-password-submit' type='submit'>Update Now</button>
         	</div>
     	</form>
       </div>
       <div class="tab-pane fade" id="item" align="left">
-    	<form id="tab2">
+    	<form id="tab2" method='POST'>
                 <div class="span7">
                     <div class="widget stacked widget-table action-table">
                         <div class="widget-header">
@@ -86,6 +134,7 @@
 							</tr>
 						</thead>
                                                 <tbody>
+                                                <form method='POST'>
                                                     <?php 
                                                     
                                                     foreach ($itemList as $item) { ?>
@@ -97,9 +146,13 @@
                                                           echo $bidList[0][0];
                                                            ?>
                                                         </td> 
-                                                        <td><a href="edit_item.php?id=<?php echo $item_avid ?>" class="btn btn-primary white">edit</a><button class="btn btn-primary">delete</button></td>
+                                                        <td><a href="edit_item.php?id=<?php echo $item_avid ?>" class="btn btn-primary white">edit</a>
+                                                            <input type="hidden" name = "delete-itemID" value = "<?php echo $item->getItemId(); ?>">
+                                                            <button class="btn btn-warning" name='delete-submit' type="submit">Delete</button> 
+                                                        </td>
                                                     </tr>
                                                     <?php } ?>
+                                                </form>
                                                 </tbody>
                                         </table>
                     </div>  
@@ -139,9 +192,9 @@
                                                         foreach($borrowtitle as $titleBor){
                                                             
                                                                echo $titleBor->getItemTitle();
-                                                             ?>title--</td>
-                                                        <td><?php  echo $titleBor->getBorrowStartDate(); ?>start--</td> 
-                                                        <td><?php  echo $titleBor->getBorrowEndDate(); ?>end--</td> 
+                                                             ?></td>
+                                                        <td><?php  echo $titleBor->getBorrowStartDate(); ?></td> 
+                                                        <td><?php  echo $titleBor->getBorrowEndDate(); ?></td> 
                                                         <td><?php echo $titleBor->getReturnLocation(); } ?></td>
                                                     </tr>
                                                     <?php } ?>
@@ -170,6 +223,7 @@
 							</tr>
 						</thead>
                                                 <tbody>
+                                                <form method='POST'>
                                                     <?php 
                                                     $bidder = $userList->getEmail();
                                                     $bidderList = BidController\getSelectedBidByUser($bidder);
@@ -184,14 +238,23 @@
                                                         
                                                         <td><?php echo $titleItem->getBidEndDate();  } ?></td> 
                                                         <td><?php
-                                                            $item_id =  $item->getItemId();
+                                                            $item_id =  $bidItem->getItemId();
                                                             $bidList = BidController\getTheHighestBidPoint($item_id);
-                                                            echo $bidList[0];
+                                                          
+                                                            echo $bidList[0][0];
                                                              ?></td>
-                                                        <td><input type="text" value="<?php echo $bidItem->getBidPoint(); ?>"class="input-xlarge" name="update-bid"></td>
-                                                        <td><button class="btn btn-primary">Update</button></td>
+                                                        <td>
+                                                            <input type="hidden" name = "curbid" value = "<?php echo $userList->getBidPoint(); ?>">
+                                                            <input type="text" value="<?php echo $bidItem->getBidPoint(); ?>"class="input-xlarge" name="update-bidpoint" id='input-update-bids' placeholder='update-bids' ></td>
+                                                        <td>
+                                                         
+                                                            <input type="hidden" name = "updatebid-itemID" value = "<?php echo $item->getItemId(); ?>">
+                                                            <input type="hidden" name = "updatebid-owner" value = "<?php echo $item->getOwner(); ?>">
+                                                            <button class="btn btn-primary" name='update-bid' type='submit'>Update</button> 
+                                                        </td>
                                                     </tr>
                                                     <?php } ?>
+                                                </form>
                                                 </tbody>
                                         </table>
                     </div> 
