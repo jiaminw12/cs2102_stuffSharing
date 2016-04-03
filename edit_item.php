@@ -49,6 +49,9 @@ if ($_POST['submit']) {
 
     if (empty($errors) == true) {
         $items = ItemController\updateItemDetails($item_id, $item_title, $description, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date);
+        header("Location: itemDetail.php?id=". $item_id);
+        $message = "Updated item!";
+        $message_type = "success";
     } else {
         foreach ($errors as $err){
             $message = $err . " " . $message;
