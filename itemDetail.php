@@ -60,6 +60,7 @@ if ($_POST['submit_borrow']) {
 
     $borrows = BorrowController\createNewBorrow($owner, $borrower, $item_id, $status);
     $ua = ItemController\updateAvailable($item_id, 0);
+    header("Location: itemDetail.php?id=" . $item_id);
 }
 ?>
 

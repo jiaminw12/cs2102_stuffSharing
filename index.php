@@ -1,9 +1,12 @@
 <?php
+include("controller/BidController.php");
+$sb = \BidController\removeAllBidsByItemID();
+
 session_start();
 $current_page = 'Home';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header("Location: search.php?keyword=". $_POST['searchText']);
+    header("Location: search.php?keyword=" . $_POST['searchText']);
 }
 ?>
 

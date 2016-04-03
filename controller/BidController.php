@@ -5,6 +5,8 @@ namespace BidController {
     include_once __DIR__ . '/../model/Bid.php';
     include_once __DIR__ . '/../db/DBHandler.php';
     include_once __DIR__ . '/UserController.php';
+    include_once __DIR__ . '/ItemController.php';
+    include_once __DIR__ . '/BorrowController.php';
 
     function createNewBid($owner, $bidder, $item_id, $bid_point) {
         date_default_timezone_set("Asia/Singapore");
@@ -31,7 +33,7 @@ namespace BidController {
 
         return $bidList;
     }
-    
+
     function getSelectedBids($item_id) {
         $statement = "SELECT * FROM bids WHERE item_id='" . $item_id . "'";
         $result = \DBHandler::execute($statement, true);
@@ -61,7 +63,7 @@ namespace BidController {
     function getSelectedBidByUserAndItemID($bidder, $item_id) {
         $statement = "SELECT bid_point FROM bids WHERE bidder='" . $bidder . "' AND item_id='" . $item_id . "'";
         $result = \DBHandler::execute($statement, true);
-        if (count($result) == 1){
+        if (count($result) == 1) {
             $bidList = $result[0];
             return $bidList;
         } else {
@@ -85,12 +87,22 @@ namespace BidController {
         $statement = "SELECT MAX(bid_point) FROM bids WHERE item_id='" . $item_id . "'";
         $result = \DBHandler::execute($statement, true);
         $bidList = array();
-            foreach ($result as $res) {
-                $bidList[] = $res;
-            }
+        foreach ($result as $res) {
+            $bidList[] = $res;
+        }
         return $bidList;
     }
-    
+
+    function getTheHighestBidPointReturnUser($item_id) {
+        $statement = "SELECT owner, bidder, MAX(bid_point) FROM bids WHERE item_id='" . $item_id . "' GROUP BY bidder, owner";
+        $result = \DBHandler::execute($statement, true);
+        $bidList = array();
+        foreach ($result as $res) {
+            $bidList[] = $res;
+        }
+        return $bidList;
+    }
+
     // Update the bidPoint based on the latest highest bid points
     function updateBidPoint($owner, $bidder, $item_id, $bid_point) {
         $statement = "UPDATE bids SET bid_point=" . $bid_point . " WHERE owner='" . $owner . "' AND item_id='" . $item_id . "' AND bidder='" . $bidder . "'";
@@ -120,32 +132,43 @@ namespace BidController {
         }
     }
 
-    function removeAllBidsByItemID($item_id, $owner) {
-        // return the highest point
-        $statement1 = \BidController\getTheHighestBidPoint($item_id);
-        $result1 = \DBHandler::execute($statement1, false);
-        $bidder = $result1[0];
-        $highest_bid_point = $result1[1];
-        $status = 1;
+    function removeBidByItemID($item_id) {
+        $statement1 = "DELETE FROM bids WHERE item_id = '" . $item_id . "'";
+        \DBHandler::execute($statement1, false);
+        return TRUE;
+    }
 
-        // insert into borrow table
-        $statement2 = \BorrowController\createNewBorrow($owner, $bidder, $item_id, $status);
-        \DBHandler::execute($statement2, false);
+    function removeAllBidsByItemID() {
+        // get the yesterday bid_end_date
+        $s1 = "SELECT item_id FROM items WHERE bid_end_date < now()::date + interval '1h'";
+        $r1 = \DBHandler::execute($s1, true);
+        if (count($r1) >= 1) {
+            foreach ($r1 as $expiredDate) {
+                $itemid = $expiredDate[0];
+                // return the highest point
+                $s2 = \BidController\getTheHighestBidPoint($itemid);
+                if ($s2 != NULL) {
+                    $highestPoint = $s2[0][0];
 
-        // delete, return the points
-        // update the points into successful sharing -> owner?
-        $statement3 = "SELECT * FROM bids WHERE item_id='" . $item_id . "'";
-        $result3 = \DBHandler::execute($statement3, true);
-        foreach ($result3 as $res) {
-            if ($res[3] < $highest_bid_point) {
-                $statement4 = \UserController\updateUserBidPoint($res[0], $res[3]);
-                $result4 = \DBHandler::execute($statement4, false);
-                $statement = "DELETE FROM bids WHERE item_id='" . $item_id . "' AND bidder='" . $res[1] . "'";
-                \DBHandler::execute($statement, false);
+                    $s3 = \BidController\getTheHighestBidPointReturnUser($itemid);
+                    foreach ($s3 as $result) {
+                        $owner = $result[0];
+                        $bidder = $result[1];
+                        $point = $result[2];
+                        if ($point !== $highestPoint) {
+                            $r4 = \UserController\getUserBidPoint(\UserController\getUsername($bidder));
+                            echo $bidder, $r4[0] + $point;
+                            \UserController\updateUserBidPoint((\UserController\getUsername($bidder)), $r4[0]+$point);
+                        } else {
+                            echo $bidder, $r4[0] + $point;
+                            \BorrowController\createNewBorrow($owner, $bidder, $itemid, 1);
+                        }
+                    }
+                    \BidController\removeBidByItemID($itemid);
+                    \ItemController\updateAvailable($itemid, 0);
+                }
             }
         }
-        
-        \ItemController\updateAvailable($item_id, 0);        
     }
 
 }

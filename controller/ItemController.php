@@ -93,6 +93,18 @@ namespace ItemController {
         }
     }
 
+    function getItemIDByDate($bid_end_date) {
+        $statement = "SELECT item_id FROM items WHERE bid_end_date ='" . $bid_end_date . "'";
+        $result = \DBHandler::execute($statement, true);
+
+        if (count($result) != 1) {
+            return NULL;
+        } else {
+            $result = $result[0];
+            return $result[0];
+        }
+    }
+
     function updateItemDetails($item_id, $item_title, $description, $bid_point_status, $available, $pickup_location, $return_location, $borrow_start_date, $borrow_end_date, $bid_end_date) {
         if ($bid_end_date != "NULL") {
             $statement = "UPDATE items SET item_title='" . $item_title . "', description ='" . $description . "', bid_point_status=" . $bid_point_status . ", available=" . $available . ", pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
@@ -106,7 +118,6 @@ namespace ItemController {
     function updateAvailable($item_id, $available) {
         $statement = "UPDATE items SET available=" . $available . " WHERE item_id ='" . $item_id . "'";
         \DBHandler::execute($statement, false);
-        header("Location: itemDetail.php?id=" . $item_id);
     }
 
     function removeItem($item_id) {
