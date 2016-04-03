@@ -65,7 +65,7 @@ if (isset($_POST['submit'])) {
 
     if ($bid_point_status == "yes") {
         $bid_point_status = $_POST["min_bid_point"];
-        if ($bid_point_status < 0){
+        if ($bid_point_status < 0) {
             $errors[] = "Bid Point must be positive.";
         }
         $bid_end_date = $_POST["bid_end_date"];
@@ -86,7 +86,7 @@ if (isset($_POST['submit'])) {
             $errors[] = "Borrow start date must be after bid end date.";
         }
     }
- 
+
     if ($borrow_end_date < $borrow_start_date) {
         $errors[] = "Borrow end date must be after borrow start date.";
     }
@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
         $message = "New item added";
         $message_type = "success";
     } else {
-        foreach ($errors as $err){
+        foreach ($errors as $err) {
             $message = $err . " " . $message;
         }
         $message_type = "danger";
@@ -117,7 +117,6 @@ if (isset($_POST['submit'])) {
 ?>
 
 <?php ob_start(); ?>
-
 <script type="text/javascript">
 
     var today = new Date();
@@ -188,29 +187,27 @@ if (isset($_POST['submit'])) {
 <br/>
 <?php if (!isset($item)) { ?>
     <div class="inner cover container">
-        <div class="row">
-            <?php
-            include_once 'template/message.php';
-            ?>
-            <div class="row"> 
-                <ul class="nav nav-tabs" role="tablist" id="myTab">
-                    <li role="presentation" class="active"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">All</a></li>
-                    <li role="presentation"><a href="#appliances" aria-controls="appliances" role="tab" data-toggle="tab">Appliances</a></li>
-                    <li role="presentation"><a href="#book" aria-controls="book" role="tab" data-toggle="tab">Book</a></li>
-                    <li role="presentation"><a href="#furniture" aria-controls="furniture" role="tab" data-toggle="tab">Furniture</a></li>
-                    <li role="presentation"><a href="#tool" aria-controls="tool" role="tab" data-toggle="tab">Tool</a></li>
-                    <li role="presentation"><a href="#others" aria-controls="others" role="tab" data-toggle="tab">Others</a></li>
+        <?php
+        include_once 'template/message.php';
+        ?>
+        <div class="row"> 
+            <ul class="nav nav-tabs" role="tablist" id="myTab">
+                <li role="presentation" class="active"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">All</a></li>
+                <li role="presentation"><a href="#appliances" aria-controls="appliances" role="tab" data-toggle="tab">Appliances</a></li>
+                <li role="presentation"><a href="#book" aria-controls="book" role="tab" data-toggle="tab">Book</a></li>
+                <li role="presentation"><a href="#furniture" aria-controls="furniture" role="tab" data-toggle="tab">Furniture</a></li>
+                <li role="presentation"><a href="#tool" aria-controls="tool" role="tab" data-toggle="tab">Tool</a></li>
+                <li role="presentation"><a href="#others" aria-controls="others" role="tab" data-toggle="tab">Others</a></li>
 
+                <?php
+                if (UserController\isSignedIn()) {
+                    ?>
+                    <li role="presentation" style="float:right;"><a href="#addNewItem" aria-controls="addNewItem" role="tab" data-toggle="tab">Create Item</a></li>
                     <?php
-                    if (UserController\isSignedIn()) {
-                        ?>
-                        <li role="presentation" style="float:right;"><a href="#addNewItem" aria-controls="addNewItem" role="tab" data-toggle="tab">Create Item</a></li>
-                        <?php
-                    }
                 }
-                ?>
-            </ul>
-        </div>
+            }
+            ?>
+        </ul>
     </div>
 
     <div class="tab-content">
@@ -218,10 +215,14 @@ if (isset($_POST['submit'])) {
         <div role="tabpanel" class="tab-pane fade in active" id="all">
             <?php
             $itemList = ItemController\getAllItems();
+            $totalNum = count($itemList);
+            $counter = 0;
             foreach ($itemList as $item) {
-                ?>
-                <div class="row">
-                    <hr/>
+                if ($counter % 2 == 0) {
+                    ?>
+                    <br>
+                    <div class="row">
+                    <?php } ?>
                     <div class="col-md-6">
                         <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
                             <button type="button" class="btn btn-success btn-xs">
@@ -235,17 +236,28 @@ if (isset($_POST['submit'])) {
                             <a href="itemDetail.php?id=<?php echo $item->getItemId(); ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </h4>
                     </div>
-                </div>
-            <?php } ?>
+                    <?php
+                    $counter++;
+                    if ($counter % 2 == 0 || $counter == $totalNum) {
+                        ?>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="appliances">
             <?php
             $itemList = ItemController\getSelectedItems("appliances");
+            $totalNum = count($itemList);
+            $counter = 0;
             foreach ($itemList as $item) {
-                ?>
-                <div class="row">
-                    <hr/>
+                if ($counter % 2 == 0) {
+                    ?>
+                    <br>
+                    <div class="row">
+                    <?php } ?>
                     <div class="col-md-6">
                         <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
                             <button type="button" class="btn btn-success btn-xs">
@@ -259,17 +271,28 @@ if (isset($_POST['submit'])) {
                             <a href="itemDetail.php?id=<?php echo $item->getItemId(); ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </h4>
                     </div>
-                </div>
-            <?php } ?>
+                    <?php
+                    $counter++;
+                    if ($counter % 2 == 0 || $counter == $totalNum) {
+                        ?>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="book">
             <?php
             $itemList = ItemController\getSelectedItems("book");
+            $totalNum = count($itemList);
+            $counter = 0;
             foreach ($itemList as $item) {
-                ?>
-                <div class="row">
-                    <hr/>
+                if ($counter % 2 == 0) {
+                    ?>
+                    <br>
+                    <div class="row">
+                    <?php } ?>
                     <div class="col-md-6">
                         <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
                             <button type="button" class="btn btn-success btn-xs">
@@ -283,17 +306,28 @@ if (isset($_POST['submit'])) {
                             <a href="itemDetail.php?id=<?php echo $item->getItemId(); ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </h4>
                     </div>
-                </div>
-            <?php } ?>
+                    <?php
+                    $counter++;
+                    if ($counter % 2 == 0 || $counter == $totalNum) {
+                        ?>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="furniture">
             <?php
             $itemList = ItemController\getSelectedItems("furniture");
+            $totalNum = count($itemList);
+            $counter = 0;
             foreach ($itemList as $item) {
-                ?>
-                <div class="row">
-                    <hr/>
+                if ($counter % 2 == 0) {
+                    ?>
+                    <br>
+                    <div class="row">
+                    <?php } ?>
                     <div class="col-md-6">
                         <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
                             <button type="button" class="btn btn-success btn-xs">
@@ -307,17 +341,28 @@ if (isset($_POST['submit'])) {
                             <a href="itemDetail.php?id=<?php echo $item->getItemId(); ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </h4>
                     </div>
-                </div>
-            <?php } ?>
+                    <?php
+                    $counter++;
+                    if ($counter % 2 == 0 || $counter == $totalNum) {
+                        ?>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="tool">
             <?php
             $itemList = ItemController\getSelectedItems("tool");
+            $totalNum = count($itemList);
+            $counter = 0;
             foreach ($itemList as $item) {
-                ?>
-                <div class="row">
-                    <hr/>
+                if ($counter % 2 == 0) {
+                    ?>
+                    <br>
+                    <div class="row">
+                    <?php } ?>
                     <div class="col-md-6">
                         <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
                             <button type="button" class="btn btn-success btn-xs">
@@ -331,17 +376,29 @@ if (isset($_POST['submit'])) {
                             <a href="itemDetail.php?id=<?php echo $item->getItemId(); ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </h4>
                     </div>
-                </div>
-            <?php } ?>
+                    <?php
+                    $counter++;
+                    if ($counter % 2 == 0 || $counter == $totalNum) {
+                        ?>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
         </div>
+
 
         <div role="tabpanel" class="tab-pane fade" id="others">
             <?php
             $itemList = ItemController\getSelectedItems("others");
+            $totalNum = count($itemList);
+            $counter = 0;
             foreach ($itemList as $item) {
-                ?>
-                <div class="row">
-                    <hr/>
+                if ($counter % 2 == 0) {
+                    ?>
+                    <br>
+                    <div class="row">
+                    <?php } ?>
                     <div class="col-md-6">
                         <h4 class = "text-left"> <?php echo $item->getItemTitle(); ?>
                             <button type="button" class="btn btn-success btn-xs">
@@ -355,8 +412,15 @@ if (isset($_POST['submit'])) {
                             <a href="itemDetail.php?id=<?php echo $item->getItemId(); ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </h4>
                     </div>
-                </div>
-            <?php } ?>
+                    <?php
+                    $counter++;
+                    if ($counter % 2 == 0 || $counter == $totalNum) {
+                        ?>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
         </div>
 
         <?php
@@ -471,8 +535,9 @@ if (isset($_POST['submit'])) {
         }
         ?>
     </div>
+</div>
 
-    <?php
-    $content = ob_get_clean();
-    include_once 'template/skeleton.php';
-    ?>
+<?php
+$content = ob_get_clean();
+include_once 'template/skeleton.php';
+?>

@@ -13,7 +13,7 @@ date_default_timezone_set("Asia/Singapore");
         <script src="js/bootstrap-datepicker.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
-        
+
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,7 +26,7 @@ date_default_timezone_set("Asia/Singapore");
 
         <!-- Custom styles for this template -->
         <link href="css/cover.css" rel="stylesheet">
-        
+
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -46,13 +46,12 @@ date_default_timezone_set("Asia/Singapore");
                     echo $content;
                     ?>
 
+                </div>
 
-                    <div class="mastfoot">
-                        <div class="inner">
-                            <p>&copy Share It 2016</p>
-                        </div>
+                <div class="mastfoot">
+                    <div class="inner">
+                        <p>&copy Share It 2016</p>
                     </div>
-
                 </div>
 
             </div>
