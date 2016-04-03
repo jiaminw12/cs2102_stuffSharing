@@ -41,15 +41,15 @@ namespace ItemController {
     function getAllItems() {
         $statement = "SELECT * FROM items WHERE available = 1 ORDER BY bid_end_date DESC";
         $result = \DBHandler::execute($statement, true);
-        $projects = array();
+        $itemList = array();
         foreach ($result as $res) {
-            $items[] = new \Item($res[0], $res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10], $res[11], $res[12]);
+            $itemList[] = new \Item($res[0], $res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10], $res[11], $res[12]);
         }
-        return $items;
+        return $itemList;
     }
 
     function getSelectedItems($category) {
-        $statement = "SELECT * FROM items WHERE category = '" . $category . "' ORDER BY item_id DESC";
+        $statement = "SELECT * FROM items WHERE category = '" . $category . "'AND available = 1 ORDER BY item_id DESC";
 
         $result = \DBHandler::execute($statement, true);
 
@@ -97,7 +97,7 @@ namespace ItemController {
         if ($bid_end_date != "NULL") {
             $statement = "UPDATE items SET item_title='" . $item_title . "', description ='" . $description . "', bid_point_status=" . $bid_point_status . ", available=" . $available . ", pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date='" . $bid_end_date . "' WHERE item_id='" . $item_id . "'";
         } else {
-            $statement = "UPDATE items SET item_title='" . $item_title . "', description ='" . $description . "', bid_point_status=" . $bid_point_status . ", available=" . $available . ", pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "' WHERE item_id='" . $item_id . "'";
+            $statement = "UPDATE items SET item_title='" . $item_title . "', description ='" . $description . "', bid_point_status=" . $bid_point_status . ", available=" . $available . ", pickup_location='" . $pickup_location . "', return_location='" . $return_location . "', borrow_start_date='" . $borrow_start_date . "', borrow_end_date='" . $borrow_end_date . "', bid_end_date=" . $bid_end_date . " WHERE item_id='" . $item_id . "'";
         }
 
         \DBHandler::execute($statement, false);

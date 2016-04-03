@@ -25,6 +25,9 @@ if ($_POST['submit']) {
 
     if ($bid_point_status == "yes") {
         $bid_point_status = $_POST["min_bid_point"];
+        if ($bid_point_status < 0){
+            $errors[] = "Bid Point must be positive.";
+        }
         $bid_end_date = $_POST["bid_end_date"];
         $time = $_POST["hours"] . ":" . $_POST["minutes"] . ":" . $_POST["seconds"];
         $bid_end_date = $bid_end_date . " " . $time;
@@ -90,11 +93,11 @@ if ($_POST['submit']) {
                 if ($(this).attr("value") == "yes") {
                     $("#bidDate").removeClass('hidden');
                     $("#bid_timming").removeClass('hidden');
-                    $("#min_bid_point").removeClass('hidden');
+                    $("#pointsBid").removeClass('hidden');
                 } else {
                     $("#bidDate").addClass('hidden');
                     $("#bid_timming").addClass('hidden');
-                    $("#min_bid_point").addClass('hidden');
+                    $("#pointsBid").addClass('hidden');
                     document.getElementById("bid_end_date").value = today;
                 }
             });
@@ -105,7 +108,6 @@ if ($_POST['submit']) {
 
 <br/>
 <div class="inner cover container">
-    <h1 class="black">eeqq</h1>
     <?php
     include_once 'template/message.php';
     $itemList = ItemController\getItem($item_id);
@@ -199,11 +201,11 @@ if ($_POST['submit']) {
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group"> 
                     <div class='input-group date hidden' id="bidDate">
                         <input class="form-control" id="bid_end_date" name="bid_end_date" required type="text" value="<?php echo $date ?>">
                         <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
+                            <span title="End Date for bidding" class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                 </div>
@@ -253,24 +255,29 @@ if ($_POST['submit']) {
                     </div> 
                 </div>
 
-                <div class="form-group ">
-                    <input class="form-control hidden" id="min_bid_point" name="min_bid_point" required type="integer" value="<?php echo $iBidPoint ?>">
-                </div>
-
-                <div class="form-group ">
-                    <input class="form-control" id="pickup_location" name="pickup_location" required type="text" value="<?php echo $iPickupLocation ?>">
-                </div>
-
-                <div class="form-group ">
-                    <input class="form-control" id="return_location" name="return_location" required type="text" value="<?php echo $iReturnLocation ?>">
-                </div>
-
                 <div class="form-group">
-                    <input class="form-control" id="borrow_start_date" name="borrow_start_date" required type="text" value="<?php echo $iStartDate ?>">
+                    <div class='input-group point hidden' id="pointsBid">
+                        <input class="form-control" id="min_bid_point" name="min_bid_point" required type="integer" value="<?php echo $iBidPoint ?>">
+                        <span class="input-group-addon">
+                            <span title="Minimum Bid Point" class="glyphicon glyphicon-usd"></span>
+                        </span>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <input class="form-control" id="borrow_end_date" name="borrow_end_date" required type="text" value="<?php echo $iEndDate ?>">
+                <div class="form-group form-inline">
+                    Pickup Location : <input class="form-control" id="pickup_location" name="pickup_location" required type="text" value="<?php echo $iPickupLocation ?>">
+                </div>
+
+                <div class="form-group form-inline ">
+                    Return Location : <input class="form-control" id="return_location" name="return_location" required type="text" value="<?php echo $iReturnLocation ?>">
+                </div>
+
+                <div class="form-group form-inline">
+                    Borrow Start Date : <input class="form-control" id="borrow_start_date" name="borrow_start_date" required type="text" value="<?php echo $iStartDate ?>">
+                </div>
+
+                <div class="form-group form-inline">
+                    Borrow End Date : <input class="form-control" id="borrow_end_date" name="borrow_end_date" required type="text" value="<?php echo $iEndDate ?>">
                 </div>
 
                <input class="btn btn-success btn-lg btn-block" id="submit" name="submit" type="submit" value="Update">

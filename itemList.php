@@ -65,6 +65,9 @@ if (isset($_POST['submit'])) {
 
     if ($bid_point_status == "yes") {
         $bid_point_status = $_POST["min_bid_point"];
+        if ($bid_point_status < 0){
+            $errors[] = "Bid Point must be positive.";
+        }
         $bid_end_date = $_POST["bid_end_date"];
         $time = $_POST["hours"] . ":" . $_POST["minutes"] . ":" . $_POST["seconds"];
         $bid_end_date = $bid_end_date . " " . $time;
@@ -184,7 +187,6 @@ if (isset($_POST['submit'])) {
 
 <br/>
 <?php if (!isset($item)) { ?>
-
     <div class="inner cover container">
         <div class="row">
             <?php
