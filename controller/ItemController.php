@@ -84,6 +84,18 @@ namespace ItemController {
         }
     }
 
+    function getItemMinBidPoint($itemid) {
+        $statement = "SELECT bid_point_status FROM items WHERE item_id ='" . $itemid . "'";
+        $result = \DBHandler::execute($statement, true);
+
+        if (count($result) != 1) {
+            return NULL;
+        } else {
+            $result = $result[0];
+            return $result[0];
+        }
+    }
+
     function getActiveUserItem() {
         $activeUser = \UserController\getSignedInUser();
         if (!isset($activeUser)) {
@@ -121,14 +133,13 @@ namespace ItemController {
     }
 
     function removeItem($item_id) {
-     //   if (\UserController\canActiveUserModifyItem($item_id)) {
-            $statement = "DELETE FROM items WHERE item_id = '" . $item_id . "'";
-            \DBHandler::execute($statement, false);
-            header("Location: profile.php");
-    //    } else {
-    //        header("Location: profile.php");
-    //    }
-        
+        //   if (\UserController\canActiveUserModifyItem($item_id)) {
+        $statement = "DELETE FROM items WHERE item_id = '" . $item_id . "'";
+        \DBHandler::execute($statement, false);
+        header("Location: profile.php");
+        //    } else {
+        //        header("Location: profile.php");
+        //    }
     }
 
     function searchItem($searchKeyword) {

@@ -155,13 +155,13 @@ namespace BidController {
                         $owner = $result[0];
                         $bidder = $result[1];
                         $point = $result[2];
+                        $r4 = \UserController\getUserBidPoint(\UserController\getUsername($bidder));
                         if ($point !== $highestPoint) {
-                            $r4 = \UserController\getUserBidPoint(\UserController\getUsername($bidder));
-                            echo $bidder, $r4[0] + $point;
                             \UserController\updateUserBidPoint((\UserController\getUsername($bidder)), $r4[0]+$point);
                         } else {
-                            echo $bidder, $r4[0] + $point;
                             \BorrowController\createNewBorrow($owner, $bidder, $itemid, 1);
+                            $r5 = \ItemController\getItemMinBidPoint($itemid);
+                            \UserController\updateUserBidPoint((\UserController\getUsername($bidder)), $r4[0]+$r5);
                         }
                     }
                     \BidController\removeBidByItemID($itemid);

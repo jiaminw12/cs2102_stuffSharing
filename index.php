@@ -1,6 +1,16 @@
 <?php
 include("controller/BidController.php");
-$sb = \BidController\removeAllBidsByItemID();
+
+$lastRunLog = 'lastrun.log';
+if (file_exists($lastRunLog)) {
+    $lastRun = file_get_contents($lastRunLog);
+    if (time() - $lastRun >= 86400) {
+         //its been more than a day so run our external file
+         \BidController\removeAllBidsByItemID();
+         //update lastrun.log with current time
+         file_put_contents($lastRunLog, time());
+    }
+}
 
 session_start();
 $current_page = 'Home';
