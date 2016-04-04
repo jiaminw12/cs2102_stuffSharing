@@ -145,10 +145,28 @@ namespace ItemController {
     function searchItem($searchKeyword) {
         $searchKeyword = strtoupper($searchKeyword);
         if (!empty($searchKeyword)) {
-            $statement = "SELECT DISTINCT item_id, item_title, description
+            $statement = "SELECT DISTINCT item_id, item_title, description, item_image
                   FROM items
                   WHERE UPPER(item_title) LIKE '%" . $searchKeyword . "%' OR
                         UPPER(description) LIKE '%" . $searchKeyword . "%'";
+
+            $result = \DBHandler::execute($statement, true);
+
+            $projects = array();
+            foreach ($result as $res) {
+                $projects[] = $res;
+            }
+            return $projects;
+        } else {
+            return NULL;
+        }
+    }
+    
+    function searchItemCategory($searchKeyword) {
+        if (!empty($searchKeyword)) {
+            $statement = "SELECT DISTINCT item_id, item_title, description, item_image
+                  FROM items
+                  WHERE category LIKE '" .strtolower($searchKeyword)  ."'";
 
             $result = \DBHandler::execute($statement, true);
 

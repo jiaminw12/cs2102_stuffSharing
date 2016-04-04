@@ -17,11 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <?php ob_start(); ?>
-<script src="js/foundation/foundation.js"></script>
-<script src="js/foundation/foundation.slider.js"></script>
-<script>
-    $(document).foundation('slider', 'reflow');
-</script>
 
 <div class="row">
     <form method="post" role="form">
@@ -41,32 +36,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <p></p>
     <div class="large-12 text-center columns">
         <br>
-        <h3 class="white"><b><?php echo $searchKeyword; ?></b></h3>
-        <br>
-
         <?php
-        $itemList = ItemController\searchItem($searchKeyword);
-        if ($itemList !== NULL) {
+        $tempSearchKeyword = strtolower($searchKeyword);
+        if (preg_match('/category/', $tempSearchKeyword)) {
+            $result = explode(':', $searchKeyword);
+            $itemList = ItemController\searchItemCategory($result[1]); 
+            $tempResult = explode(':', $searchKeyword);?>
+            <br>
+            <h3 class="white"><b><?php echo "Category : " . $tempResult[1] ?></b></h3>
+        <?php } else {
+            $itemList = ItemController\searchItem($searchKeyword);?>
+            <br>
+            <h3 class="white"><b><?php echo $searchKeyword; ?></b></h3>
+        <?php }
+        $totalNum = count($itemList);
+        $counter = 0;
+        if ($itemList == NULL) {
+            ?>
+            <h1 class = "white"><b>Sorry, no items found !</b></h1>
+            <?php
+        } else {
             foreach ($itemList as $item) {
+                $id = $item[0];
                 $title = $item[1];
                 $desc = $item[2];
-                ?>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4 class = "text-left white"><b><?php echo $title ?></b>
-                            <br>
-                            <p class="white"><?php echo $desc ?></p>
-                            <br>
-                            <a href="itemDetail.php?id=<?php echo $item[0] ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
-                        </h4>
+                $image = $item[3];
+                if ($counter % 3 == 0) {
+                    ?>
+                    <br>
+                    <div class="row">
+                    <?php } ?>
+                    <div class="col-md-4 pin">
+                        <h4><b><?php echo $title ?></b></h4>
+                        <img src="uploadFiles/<?php echo $image ?>" class="imageCenter" alt="" style="height: 100px;">
+                        <p></p>
+                        <a href="itemDetail.php?id=<?php echo $id ?>" class="btn btn-primary white">View Item <span class="glyphicon glyphicon-chevron-right"></span></a>
                     </div>
-                </div>
-            <?php }
+                    <?php
+                    $counter++;
+                    if ($counter % 3 == 0 || $counter == $totalNum) {
+                        ?>
+                    </div>
+                    <?php
+                }
+            }
         }
         ?>
     </div>
 </div>
-
 
 <?php
 $content = ob_get_clean();

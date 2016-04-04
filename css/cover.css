@@ -6,17 +6,17 @@
 a,
 a:focus,
 a:hover {
-  color: #fff;
+    color: #fff;
 }
 
 /* Custom default button */
 .btn-default,
 .btn-default:hover,
 .btn-default:focus {
-  color: #333;
-  text-shadow: none; /* Prevent inheritence from `body` */
-  background-color: #fff;
-  border: 1px solid #fff;
+    color: #333;
+    text-shadow: none; /* Prevent inheritence from `body` */
+    background-color: #fff;
+    border: 1px solid #fff;
 }
 
 
@@ -26,36 +26,36 @@ a:hover {
 
 html,
 body {
-  height: 100%;
-  background-color: #43AECC;
+    height: 100%;
+    background-color: #43AECC;
 }
 body {
-  color: #fff;
-  text-align: center;
-  /*text-shadow: 0 1px 3px rgba(0,0,0,.5);*/
+    color: #fff;
+    text-align: center;
+    /*text-shadow: 0 1px 3px rgba(0,0,0,.5);*/
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 .site-wrapper {
-  display: table;
-  width: 100%;
-  height: 100%; /* For at least Firefox */
-  min-height: 100%;
-  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-          box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+    display: table;
+    width: 100%;
+    height: 100%; /* For at least Firefox */
+    min-height: 100%;
+    -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+    box-shadow: inset 0 0 100px rgba(0,0,0,.5);
 }
 .site-wrapper-inner {
-  display: table-cell;
-  vertical-align: top;
+    display: table-cell;
+    vertical-align: top;
 }
 .cover-container {
-  margin-right: auto;
-  margin-left: auto;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 /* Padding for spacing */
 .inner {
-  padding: 30px;
+    padding: 30px;
 }
 
 
@@ -63,46 +63,46 @@ body {
  * Header
  */
 .masthead-brand {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  
+    margin-top: 10px;
+    margin-bottom: 10px;
+
 }
 
 .masthead-nav > li {
-  display: inline-block;
+    display: inline-block;
 }
 .masthead-nav > li + li {
-  margin-left: 20px;
+    margin-left: 20px;
 }
 .masthead-nav > li > a {
-  padding-right: 0;
-  padding-left: 0;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff; /* IE8 proofing */
-  color: rgba(255,255,255,.75);
-  border-bottom: 2px solid transparent;
+    padding-right: 0;
+    padding-left: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff; /* IE8 proofing */
+    color: rgba(255,255,255,.75);
+    border-bottom: 2px solid transparent;
 }
 .masthead-nav > li > a:hover,
 .masthead-nav > li > a:focus {
-  background-color: transparent;
-  border-bottom-color: #a9a9a9;
-  border-bottom-color: rgba(255,255,255,.25);
+    background-color: transparent;
+    border-bottom-color: #a9a9a9;
+    border-bottom-color: rgba(255,255,255,.25);
 }
 .masthead-nav > .active > a,
 .masthead-nav > .active > a:hover,
 .masthead-nav > .active > a:focus {
-  color: #fff;
-  border-bottom-color: #fff;
+    color: #fff;
+    border-bottom-color: #fff;
 }
 
 @media (min-width: 768px) {
-  .masthead-brand {
-    float: left;
-  }
-  .masthead-nav {
-    float: right;
-  }
+    .masthead-brand {
+        float: left;
+    }
+    .masthead-nav {
+        float: right;
+    }
 }
 
 
@@ -111,11 +111,11 @@ body {
  */
 
 .cover {
-  padding: 0 20px;
+    padding: 0 20px;
 }
 .cover .btn-lg {
-  padding: 10px 20px;
-  font-weight: bold;
+    padding: 10px 20px;
+    font-weight: bold;
 }
 
 
@@ -124,8 +124,8 @@ body {
  */
 
 .mastfoot {
-  color: #999; /* IE8 proofing */
-  color: rgba(255,255,255,.5);
+    color: #999; /* IE8 proofing */
+    color: rgba(255,255,255,.5);
 }
 
 
@@ -134,63 +134,63 @@ body {
  */
 
 @media (min-width: 768px) {
-  .masthead {
-    top: 0;
-  }
-  .mastfoot {
-    bottom: 0;
-  }
-  /* Handle the widths */
-  .masthead,
-  .mastfoot,
-  .cover-container {
-    width: 80%; /* Must be percentage or pixels for horizontal alignment */
-  }
+    .masthead {
+        top: 0;
+    }
+    .mastfoot {
+        bottom: 0;
+    }
+    /* Handle the widths */
+    .masthead,
+    .mastfoot,
+    .cover-container {
+        width: 80%; /* Must be percentage or pixels for horizontal alignment */
+    }
 }
 
 @media (min-width: 992px) {
-  .masthead,
-  .mastfoot,
-  .cover-container {
-    margin: auto;
-    width: 80%;
-  }
+    .masthead,
+    .mastfoot,
+    .cover-container {
+        margin: auto;
+        width: 80%;
+    }
 }
 
 .row {
-  margin: auto;
-  width: 100%;
-  color: #333 !important;
-  padding: 2px 10px 2px 10px;
+    margin: auto;
+    width: 100%;
+    color: #333 !important;
+    padding: 2px 10px 2px 10px;
 }
 
 .table {
-  color: #333 !important;
+    color: #333 !important;
 }
 
 .container {
-  width: 75%;
-  border-radius: 10px;
-  background-color: #fff;
-  padding: 30px 50px 30px 50px;
-  margin: auto;
+    width: 75%;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 30px 50px 30px 50px;
+    margin: auto;
 }
 
 button {
-  text-align: right;
+    text-align: right;
 }
 
 
 .container a {
-  color: #337ab7;
+    color: #337ab7;
 }
 
 .borderless th, .borderless td { 
-     border-top: none !important; 
+    border-top: none !important; 
 }
 
 body {
-  word-wrap: break-word;
+    word-wrap: break-word;
 }
 
 body > div > div > div > div.inner.cover.container button a {
@@ -206,9 +206,9 @@ body > div > div > div > div.inner.cover.container button a {
     background: white !important; 
 }
 .stylish-input-group .form-control{
-	border-right:0; 
-	box-shadow:0 0 0; 
-	border-color:#ccc;
+    border-right:0; 
+    box-shadow:0 0 0; 
+    border-color:#ccc;
 }
 .stylish-input-group button{
     border:0;
@@ -216,57 +216,57 @@ body > div > div > div > div.inner.cover.container button a {
 }
 
 .fileinput {
-  display: inline-block;
-  margin-bottom: 9px;
+    display: inline-block;
+    margin-bottom: 9px;
 }
 .fileinput .thumbnail {
-  display: inline-block;
-  margin-bottom: 5px;
-  overflow: hidden;
-  text-align: center;
-  vertical-align: middle;
+    display: inline-block;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
 }
 .fileinput .thumbnail > img {
-  max-height: 100%;
+    max-height: 100%;
 }
 .fileinput .btn {
-  vertical-align: middle;
+    vertical-align: middle;
 }
 .fileinput-exists .fileinput-new,
 .fileinput-new .fileinput-exists {
-  display: none;
+    display: none;
 }
 .fileinput-inline .fileinput-controls {
-  display: inline;
+    display: inline;
 }
 .fileinput-filename {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: middle;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: middle;
 }
 .fileinput.input-group {
-  display: table;
+    display: table;
 }
 .fileinput.input-group > * {
-  position: relative;
-  z-index: 2;
+    position: relative;
+    z-index: 2;
 }
 .fileinput.input-group > .btn-file {
-  z-index: 1;
+    z-index: 1;
 }
 .fileinput-new.input-group .btn-file,
 .fileinput-new .input-group .btn-file {
-  border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
 }
 .fileinput-new.input-group .btn-file.btn-xs,
 .fileinput-new .input-group .btn-file.btn-xs,
 .fileinput-new.input-group .btn-file.btn-sm,
 .fileinput-new .input-group .btn-file.btn-sm {
-  border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
 }
 .fileinput-new.input-group .btn-file.btn-lg,
 .fileinput-new .input-group .btn-file.btn-lg {
-  border-radius: 0 6px 6px 0;
+    border-radius: 0 6px 6px 0;
 }
 
 .black {
@@ -275,4 +275,22 @@ body > div > div > div > div.inner.cover.container button a {
 
 .white {
     color: #fff !important;
+}
+
+.pin {
+    width: 300px;
+    margin: 3px 1px;
+    border-radius: 5px;
+    min-height: 150px;
+    padding: 10px;
+    position:relative;
+    background: -webkit-gradient(linear, 0% 20%, 0% 92%, from(#f3f3f3), to(#fff), color-stop(.1,#f3f3f3));
+    border-top: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    -webkit-box-shadow: -1px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.pin.imageCenter{
+    margin-left: auto;
+    margin-right: auto
 }

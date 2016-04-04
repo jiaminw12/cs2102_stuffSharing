@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <select class="form-control" id="roles" name="roles" selected="<?php echo $admin ?>">
                     <option <?php echo $admin == 'user' ? "selected" : ""; ?> value="creator">User</option>
-                    <option <?php echo $admin == 'admin' ? "selected" : ""; ?> value="contributor">Administrator</option>
+                    <option <?php echo $admin == 'admin' ? "selected" : ""; ?> value="admin">Administrator</option>
                 </select>
             </div>
             <div class="form-group ">
