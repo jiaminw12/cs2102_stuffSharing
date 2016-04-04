@@ -40,6 +40,7 @@ namespace ItemController {
 
     function getAllItems() {
         $statement = "SELECT * FROM items WHERE available = 1 ORDER BY bid_end_date DESC";
+       
         $result = \DBHandler::execute($statement, true);
         $itemList = array();
         foreach ($result as $res) {

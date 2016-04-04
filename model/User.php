@@ -54,7 +54,7 @@ class User {
     }
 
     public function getAdmin() {
-        return $this->roles;
+        return $this->admin;
     }
 
     public function setAdmin($admin) {
