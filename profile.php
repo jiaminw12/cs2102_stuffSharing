@@ -11,7 +11,14 @@ $username = $_SESSION["username"];
 $_SESSION['previous_location'] = 'profile';
 $userList = UserController\getUser($username);
 $owner = $userList->getEmail();
-$itemList = ItemController\getAvailableItem($owner);
+
+if ($userList->getAdmin() == 1){
+    
+    $itemList = ItemController\getAllItems();
+}else {
+    $itemList = ItemController\getAvailableItem($owner);
+}
+
 
 // on profile update
 if (isset($_POST['update-profile-submit'])) {
@@ -42,32 +49,71 @@ if (isset($_POST['update-password-submit'])) {
 if (isset($_POST['delete-submit'])) {
     $itemiD = $_POST['delete-itemID'];
     $userList = ItemController\removeItem($itemiD);
-    $itemList = ItemController\getAvailableItem($owner);
+    if ($userList->getAdmin() == 1){
+        $itemList = ItemController\getAllItems();
+    }else {
+        $itemList = ItemController\getAvailableItem($owner);
+    }
     header("Location: profile.php");
 }
 
 // update bid point
 if ($_POST['update-bid']) {
-    echo "haha";
     $curbid = $_POST['curbid'];
     $itemiD = $_POST['updatebid-itemID'];
     $bid_point = $_POST['update-bidpoint'];
+    $prevbid = $_POST['prev-bid'];
     $owner = $_POST['updatebid-owner'];
-    $bidder = $userList->getEmail();
+    $bidder = $_POST['updatebid-bidder'];
     if ($curbid < $bid_point) {
         $message = "Not enough bid point";
         $message_type = "danger";
     } else {
+        $curbid = $curbid + $prevbid - $bid_point;
         $userList = BidController\updateBidPoint($owner, $bidder, $itemiD, $bid_point);
+        $userList = UserController\updateUserBidPoint($username, $curbid);
+        if ($userList->getAdmin() == 1){
+            $itemList = ItemController\getAllItems();
+        }else {
+            $itemList = ItemController\getAvailableItem($owner);
+        }
+        if ($userList->getAdmin()==1){
+            $bidderList = BidController\getAllBids();
+                                                
+        } else {
+            $bidder = $userList->getEmail();
+            $bidderList = BidController\getSelectedBidByUser($bidder);
+        }
         header("Location: profile.php");
     }
 }
+// delete bid
+if ($_POST['delete-bid']) {
+    $curbid = $_POST['curbid'];
+    $prevbid = $_POST['prev-bid'];
+    $itemiD = $_POST['updatebid-itemID'];
+    $bid_point = $_POST['update-bidpoint'];
+    $owner = $_POST['updatebid-owner'];
+    $bidder = $userList->getEmail();
+    
+    $userList = BidController\removeBidByItemID($itemiD);
+    $curbid = $curbid + $prevbid;
+    $userList = UserController\updateUserBidPoint($username, $curbid);
+    if ($userList->getAdmin() == 1){
+        $itemList = ItemController\getAllItems();
+    }else {
+        $itemList = ItemController\getAvailableItem($owner);
+    }
+        header("Location: profile.php");
+    
+}
+
+
 ?>
 
 
 <?php ob_start(); ?>
 <br/>
-<h1 class="black">te15679</h1>
 <div class="inner cover container">
     <?php
     include_once 'template/message.php';
@@ -98,7 +144,8 @@ if ($_POST['update-bid']) {
                         <label>Email</label><br>
                         <?php echo $userList->getEmail(); ?><br>
                         <label>Current bid point</label><br>
-                        <?php echo $userList->getBidPoint(); ?><br><br>
+                        <?php echo $userList->getBidPoint(); ?><br>
+                        <br>
                         <div align = "center">
                             <button class="btn btn-primary" name='update-profile-submit' type='submit'>Update</button>
                         </div>
@@ -175,19 +222,18 @@ if ($_POST['update-bid']) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $borroweremail = $userList->getEmail();
-
-                                        $borrow = BorrowController\getAllBorrowsByUser($borroweremail);
-
-
+                                        if ($userList->getAdmin() == 1){
+                                            $borrow = BorrowController\getAllBorrows();
+                                        } else {
+                                            $borroweremail = $userList->getEmail();
+                                            $borrow = BorrowController\getAllBorrowsByUser($borroweremail);
+                                        }                                  
                                         foreach ($borrow as $borrowitem) {
                                             ?>
                                             <tr>
                                                 <td><?php
                                                     $borrow_id = $borrowitem->getItemId();
-
                                                     $borrowtitle = ItemController\getItem($borrow_id);
-
                                                     foreach ($borrowtitle as $titleBor) {
 
                                                         echo $titleBor->getItemTitle();
@@ -223,9 +269,15 @@ if ($_POST['update-bid']) {
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $bidder = $userList->getEmail();
-                                            $bidderList = BidController\getSelectedBidByUser($bidder);
+                                            if ($userList->getAdmin()==1){
+                                                $bidderList = BidController\getAllBids();
+                                                
+                                            } else {
+                                                $bidder = $userList->getEmail();
+                                                $bidderList = BidController\getSelectedBidByUser($bidder);
+                                            }
                                             foreach ($bidderList as $bidItem) {
+                                                
                                                 ?>
                                                 <tr>
                                                     <td><?php
@@ -248,14 +300,19 @@ if ($_POST['update-bid']) {
 
                                                     <td>
                                                         <input type="hidden" name = "curbid" value = "<?php echo $userList->getBidPoint(); ?>">
+                                                        <input type="hidden" name = "prev-bid" value = "<?php echo $bidItem->getBidPoint(); ?>">
                                                         <input type="text" value="<?php echo $bidItem->getBidPoint(); ?>"class="input-xlarge" name="update-bidpoint" id='input-update-bids' placeholder='update-bids' >
-
-                                                        <input type="hidden" name = "updatebid-itemID" value = "<?php echo $item->getItemId(); ?>">
-                                                        <input type="hidden" name = "updatebid-owner" value = "<?php echo $item->getOwner(); ?>">
+                                                    </td>
+                                                    <td width="50%">
+                                                        <input type="hidden" name = "updatebid-itemID" value = "<?php echo $bidItem->getItemId(); ?>">
+                                                        <input type="hidden" name = "updatebid-owner" value = "<?php echo $bidItem->getOwner(); ?>">
+                                                        <input type="hidden" name = "updatebid-bidder" value = "<?php echo $bidItem->getBidder(); ?>">
+                                                        
                                                         <input class="btn btn-primary" name="update-bid" type="submit"value="Update"> 
+                                                        <input class="btn btn-warning" name="delete-bid" type="submit"value="Delete"> 
                                                     </td>
                                                 </tr>
-<?php } ?>
+                                                <?php } ?>
                                         </tbody>
                                     </table>
                                 </form>

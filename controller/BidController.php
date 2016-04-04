@@ -106,9 +106,10 @@ namespace BidController {
     // Update the bidPoint based on the latest highest bid points
     function updateBidPoint($owner, $bidder, $item_id, $bid_point) {
         $statement = "UPDATE bids SET bid_point=" . $bid_point . " WHERE owner='" . $owner . "' AND item_id='" . $item_id . "' AND bidder='" . $bidder . "'";
-        $RESULT = \DBHandler::execute($statement, false);
+        \DBHandler::execute($statement, false);
+        
         header("Location: profile.php");
-        return TRUE;
+      //  return TRUE;
     }
 
     //  User remove their bid
@@ -134,6 +135,7 @@ namespace BidController {
     function removeBidByItemID($item_id) {
         $statement1 = "DELETE FROM bids WHERE item_id = '" . $item_id . "'";
         \DBHandler::execute($statement1, false);
+        header("Location: profile.php");
         return TRUE;
     }
 
