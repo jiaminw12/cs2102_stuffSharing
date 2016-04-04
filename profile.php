@@ -108,6 +108,29 @@ if ($_POST['delete-bid']) {
     
 }
 
+// delete borrow
+if ($_POST['delete-borrow-submit']) {
+    $itemiD = $_POST['delete-borrow-itemID'];
+    $ownerbo = $_POST['delete-borrow-owner'];
+    $borrower = $_POST['delete-borrow-borrower'];
+    echo $itemiD;
+    
+    $userList = BorrowController\removeBorrow($ownerbo, $borrower, $itemiD);
+    if ($userList->getAdmin() == 1){
+        $itemList = ItemController\getAllItems();
+    }else {
+        $itemList = ItemController\getAvailableItem($owner);
+    }
+    if ($userList->getAdmin() == 1){
+        $borrow = BorrowController\getAllBorrows();
+    } else {
+        $borroweremail = $userList->getEmail();
+        $borrow = BorrowController\getAllBorrowsByUser($borroweremail);
+    }   
+        header("Location: profile.php");
+    
+}
+
 
 ?>
 
@@ -209,7 +232,7 @@ if ($_POST['delete-bid']) {
                                 <h4>Borrowed Items</h4>
                             </div> <!-- /widget-header -->
                             <div class="widget-content">
-
+                               <form method="POST" class="form" role="form" action="profile.php">
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
@@ -217,6 +240,9 @@ if ($_POST['delete-bid']) {
                                             <th>Borrow Start Date</th>
                                             <th>Borrow End Date</th>
                                             <th>Return Location</th>
+                                            <?php  if ($userList->getAdmin()==1){   ?>
+                                            <th class="td-actions"></th>
+                                            <?php } ?>
 
                                         </tr>
                                     </thead>
@@ -244,10 +270,27 @@ if ($_POST['delete-bid']) {
                                                         echo $titleBor->getReturnLocation();
                                                     }
                                                     ?></td>
+                                                     
+                                                    <?php  if ($userList->getAdmin()==1){   ?>
+                                                    <td> 
+                                                       
+                                                        <input type="hidden" name = "delete-borrow-itemID" value = "<?php echo $borrowitem->getItemId(); ?>">
+                                                        
+                                                        <input type="hidden" name = "delete-borrow-owner" value = "<?php echo $borrowitem->getOwner(); ?>">
+                                                        <input type="hidden" name = "delete-borrow-borrower" value = "<?php echo $borrowitem->getBorrower(); ?>">
+                                                        
+                                                        <input class="btn btn-warning" name="delete-borrow-submit" type="submit"value="Delete">
+                                                    
+                                                    </td>
+                                                    <?php } ?>
+                                                    
                                             </tr>
                                         <?php } ?>
                                     </tbody>
+                                    
                                 </table>
+                                       </form>
+                                
                             </div> 
 
 

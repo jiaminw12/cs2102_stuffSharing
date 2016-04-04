@@ -25,7 +25,7 @@ class Borrow {
         return $this->owner;
     }
 
-    public function getBidder() {
+    public function getBorrower() {
         return $this->borrower;
     }
 

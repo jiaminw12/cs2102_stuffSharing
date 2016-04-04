@@ -46,13 +46,14 @@ namespace BorrowController {
     }
 
     function removeBorrow($owner, $borrower, $item_id) {
-        if (\UserController\canActiveUserModifyBorrow($item_id)) {
-            $statement = "DELETE FROM borrows 'WHERE owner='" . $owner . "'AND item_id='" . $item_id . "' AND borrower='" . $borrower . "'";
-            $result = \DBHandler::execute($statement, false);
-            return $result;
-        } else {
-            return null;
-        }
+     //   if (\UserController\canActiveUserModifyBorrow($item_id)) {
+            $statement = "DELETE FROM borrows WHERE owner='" . $owner . "'AND item_id='" . $item_id . "' AND borrower='" . $borrower . "'";
+            \DBHandler::execute($statement, false);
+            header("Location: profile.php");
+    //        return $result;
+    //    } else {
+    //        return null;
+    //    }
     }
 
     function removeAllBorrows() {
