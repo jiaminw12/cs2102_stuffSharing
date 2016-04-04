@@ -33,7 +33,7 @@
                 $userList = UserController\updatePassword($newpassword, $email);
                 header("Location: profile.php");
             } else {
-                $message = "Wrong current password" + $currentpassword;
+                $message = "Wrong current password";
                 $message_type = "danger";
             }
            
@@ -43,7 +43,6 @@
     if(isset($_POST['delete-submit'])) {
         $itemiD = $_POST['delete-itemID'] ;
         $userList=ItemController\removeItem($itemiD);
-        echo "yoyo xia sdk";
         header("Location: profile.php");
     }
  // update bid point
@@ -90,7 +89,8 @@
       <div class="tab-pane active in" id="home" align="left">
         <form id="tab" method='POST'>
             <label>Username</label><br>
-            <input type="text" value="<?php echo $userList->getUsername(); ?>" class="input-xlarge" name='username' id='input-username' placeholder='username'><br>
+            <input type="hidden" value="<?php echo $userList->getUsername(); ?>" class="input-xlarge" name='username' id='input-username' placeholder='username'>
+            <?php echo $userList->getUsername(); ?><br>
             <label>Name</label><br>
             <input type="text" value="<?php echo $userList->getName(); ?>" class="input-xlarge" name ='name' id='input-name' placeholder='name'><br>
             <label>Contact Number</label><br>
@@ -134,7 +134,7 @@
 							</tr>
 						</thead>
                                                 <tbody>
-                                                <form method='POST'>
+                                                
                                                     <?php 
                                                     
                                                     foreach ($itemList as $item) { ?>
@@ -152,7 +152,7 @@
                                                         </td>
                                                     </tr>
                                                     <?php } ?>
-                                                </form>
+                                                
                                                 </tbody>
                                         </table>
                     </div>  
@@ -223,7 +223,7 @@
 							</tr>
 						</thead>
                                                 <tbody>
-                                                <form method='POST'>
+                                                
                                                     <?php 
                                                     $bidder = $userList->getEmail();
                                                     $bidderList = BidController\getSelectedBidByUser($bidder);
@@ -251,10 +251,11 @@
                                                             <input type="hidden" name = "updatebid-itemID" value = "<?php echo $item->getItemId(); ?>">
                                                             <input type="hidden" name = "updatebid-owner" value = "<?php echo $item->getOwner(); ?>">
                                                             <button class="btn btn-primary" name='update-bid' type='submit'>Update</button> 
+                                                             
                                                         </td>
                                                     </tr>
                                                     <?php } ?>
-                                                </form>
+                                                
                                                 </tbody>
                                         </table>
                     </div> 
@@ -265,8 +266,8 @@
                 </div>
                 
         	
-    	</form>
-      </div>
+    	
+      </div></form>
   </div>
       </span>
     
