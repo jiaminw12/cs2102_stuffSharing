@@ -107,7 +107,6 @@ namespace BidController {
     function updateBidPoint($owner, $bidder, $item_id, $bid_point) {
         $statement = "UPDATE bids SET bid_point=" . $bid_point . " WHERE owner='" . $owner . "' AND item_id='" . $item_id . "' AND bidder='" . $bidder . "'";
         $RESULT = \DBHandler::execute($statement, false);
-        print_r($RESULT);
         header("Location: profile.php");
         return TRUE;
     }
