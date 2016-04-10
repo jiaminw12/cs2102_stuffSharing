@@ -13,12 +13,10 @@ $userList = UserController\getUser($username);
 $owner = $userList->getEmail();
 
 if ($userList->getAdmin() == 1){
-    
     $itemList = ItemController\getAllItems();
 }else {
     $itemList = ItemController\getAvailableItem($owner);
 }
-
 
 // on profile update
 if (isset($_POST['update-profile-submit'])) {
@@ -156,37 +154,41 @@ if ($_POST['delete-borrow-submit']) {
             </ul>
             <div id="myTabContent" class="tab-content">
                 <div class="tab-pane active in" id="home" align="left">
+                    <br/>
                     <form id="tab" method='POST'>
-                        <label>Username</label><br>
+                        <label>Username</label><br/>
                         <input type="hidden" value="<?php echo $userList->getUsername(); ?>" class="input-xlarge" name='username' id='input-username' placeholder='username'>
-                        <?php echo $userList->getUsername(); ?><br>
-                        <label>Name</label><br>
-                        <input type="text" value="<?php echo $userList->getName(); ?>" class="input-xlarge" name ='name' id='input-name' placeholder='name'><br>
-                        <label>Contact Number</label><br>
-                        <input type="text" value="<?php echo $userList->getContactNum(); ?>" class="input-xlarge" name='contact_num' id='input-contact-num' placeholder='contact_num'><br>
+                        <?php echo $userList->getUsername(); ?><br/>
+                        <label>Name</label><br/>
+                        <input type="text" value="<?php echo $userList->getName(); ?>" class="input-xlarge" name ='name' id='input-name' placeholder='name'><br/>
+                        <label>Contact Number</label><br/>
+                        <input type="text" value="<?php echo $userList->getContactNum(); ?>" class="input-xlarge" name='contact_num' id='input-contact-num' placeholder='contact_num'><br/>
                         <label>Email</label><br>
-                        <?php echo $userList->getEmail(); ?><br>
-                        <label>Current bid point</label><br>
-                        <?php echo $userList->getBidPoint(); ?><br>
-                        <br>
+                        <?php echo $userList->getEmail(); ?><br/>
+                        <label>Current bid point</label><br/>
+                        <?php echo $userList->getBidPoint(); ?><br/>
+                        <br/>
                         <div align = "center">
                             <button class="btn btn-primary" name='update-profile-submit' type='submit'>Update</button>
                         </div>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="profile" align="left">
+                    <br/>
                     <form id="tab2" method='POST'>
                         <label>Current Password</label>
                         <input type="password" name='current-password' class="form-control" id="input-current-password" placeholder="Current password">
+                        <br/>
                         <label>New Password</label>
                         <input type="password" name='new-password' class="form-control" id="input-new-password" placeholder="New password">
+                        <br/>
                         <div>
                             <button class="btn btn-primary" name='update-password-submit' type='submit'>Update Now</button>
                         </div>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="item" align="left">
-
+                    <br/>
                     <div class="span7">
                         <div class="widget stacked widget-table action-table">
                             <div class="widget-header">
@@ -210,7 +212,11 @@ if ($_POST['delete-borrow-submit']) {
                                                 <td><?php
                                                     $item_avid = $item->getItemId();
                                                     $bidList = BidController\getTheHighestBidPoint($item_avid);
-                                                    echo $bidList[0][0];
+                                                    if ($bidList[0][0] > 0){
+                                                        echo $bidList[0][0];
+                                                    } else {
+                                                        echo $item->getBidPointStatus();
+                                                    }
                                                     ?>
                                                 </td> 
                                                 <td>

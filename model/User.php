@@ -48,7 +48,7 @@ class User {
         $this->name = $name;
         return $this->save();
     }
-    public function setBidPoint($name) {
+    public function setBidPoint($bid_point) {
         $this->name = $bid_point;
         return $this->save();
     }
