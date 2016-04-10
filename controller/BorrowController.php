@@ -41,8 +41,9 @@ namespace BorrowController {
     }
 
     function updateStatus($owner, $borrower, $item_id, $status) {
-        $statement = "UPDATE borrows SET status='{$status}'WHERE owner='" . $owner . "'AND item_id='" . $item_id . "' AND borrower='" . $borrower . "'";
-        return \DBHandler::execute($statement, false);
+        $statement = "UPDATE borrows SET status=" . $status ." WHERE owner='" . $owner . "' AND item_id='" . $item_id . "' AND borrower='" . $borrower . "'";
+        \DBHandler::execute($statement, false);
+        header("Location: profile.php");
     }
 
     function removeBorrow($owner, $borrower, $item_id) {
